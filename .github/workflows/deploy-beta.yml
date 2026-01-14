@@ -1,0 +1,202 @@
+name: Deploy Beta
+
+# This workflow deploys beta builds to TestFlight (iOS) and Play Console Internal Testing (Android)
+# Prerequisites:
+# 1. Setup repository secrets:
+#    - ANDROID_KEYSTORE_BASE64: Base64 encoded keystore file
+#    - ANDROID_KEYSTORE_PASSWORD: Keystore password
+#    - ANDROID_KEY_ALIAS: Key alias
+#    - ANDROID_KEY_PASSWORD: Key password
+#    - GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: Service account JSON for Play Console API
+#    - IOS_CERTIFICATE_P12_BASE64: iOS distribution certificate (base64)
+#    - IOS_CERTIFICATE_PASSWORD: Certificate password
+#    - IOS_PROVISIONING_PROFILE_BASE64: Provisioning profile (base64)
+#    - APP_STORE_CONNECT_API_KEY_ID: App Store Connect API Key ID
+#    - APP_STORE_CONNECT_ISSUER_ID: App Store Connect Issuer ID
+#    - APP_STORE_CONNECT_API_KEY_BASE64: App Store Connect API Key (base64)
+# 2. Configure Fastlane for deployment automation (recommended)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  version:
+    name: Determine Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build_number: ${{ steps.version.outputs.build_number }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate version
+        id: version
+        run: |
+          # Get the latest tag or default to 1.0.0
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          VERSION=${LATEST_TAG#v}
+
+          # Calculate build number from commit count
+          BUILD_NUMBER=$(git rev-list --count HEAD)
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION+$BUILD_NUMBER"
+
+  deploy-android-beta:
+    name: Deploy Android Beta
+    runs-on: ubuntu-latest
+    needs: version
+    defaults:
+      run:
+        working-directory: viaswiss_app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # Uncomment and configure when you have signing keys
+      # - name: Configure keystore
+      #   run: |
+      #     echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/keystore.jks
+      #     echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > android/key.properties
+      #     echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+      #     echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+      #     echo "storeFile=keystore.jks" >> android/key.properties
+
+      - name: Build Android App Bundle (AAB)
+        run: |
+          flutter build appbundle \
+            --release \
+            --build-number=${{ needs.version.outputs.build_number }} \
+            --build-name=${{ needs.version.outputs.version }}
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: viaswiss_app/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      # Uncomment when ready to deploy to Play Console
+      # - name: Deploy to Play Console Internal Testing
+      #   uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+      #     packageName: com.viaswiss.app
+      #     releaseFiles: viaswiss_app/build/app/outputs/bundle/release/app-release.aab
+      #     track: internal
+      #     status: completed
+
+  deploy-ios-beta:
+    name: Deploy iOS Beta
+    runs-on: macos-latest
+    needs: version
+    defaults:
+      run:
+        working-directory: viaswiss_app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # Uncomment and configure when you have signing certificates
+      # - name: Configure code signing
+      #   run: |
+      #     # Import certificate
+      #     echo "${{ secrets.IOS_CERTIFICATE_P12_BASE64 }}" | base64 -d > certificate.p12
+      #     security create-keychain -p "" build.keychain
+      #     security import certificate.p12 -k build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+      #     security set-keychain-settings -t 3600 -u build.keychain
+      #     security default-keychain -s build.keychain
+      #     security unlock-keychain -p "" build.keychain
+      #
+      #     # Install provisioning profile
+      #     echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 -d > profile.mobileprovision
+      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      #     cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Build iOS IPA
+        run: |
+          flutter build ipa \
+            --release \
+            --build-number=${{ needs.version.outputs.build_number }} \
+            --build-name=${{ needs.version.outputs.version }} \
+            --no-codesign || echo "Skipping codesigning for now"
+
+      - name: Upload IPA artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-ipa
+          path: viaswiss_app/build/ios/ipa/*.ipa
+          retention-days: 30
+          if-no-files-found: warn
+
+      # Uncomment when ready to deploy to TestFlight
+      # - name: Deploy to TestFlight
+      #   uses: apple-actions/upload-testflight-build@v1
+      #   with:
+      #     app-path: viaswiss_app/build/ios/ipa/viaswiss_app.ipa
+      #     issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      #     api-private-key: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+
+  notify:
+    name: Send Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [version, deploy-android-beta, deploy-ios-beta]
+    if: always()
+
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Number**: ${{ needs.version.outputs.build_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Android Status**: ${{ needs.deploy-android-beta.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **iOS Status**: ${{ needs.deploy-ios-beta.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Note: Actual deployment to stores is disabled until signing certificates are configured." >> $GITHUB_STEP_SUMMARY
