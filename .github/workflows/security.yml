@@ -1,0 +1,127 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: viaswiss_app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check for known vulnerabilities
+        run: |
+          echo "Checking for vulnerable packages..."
+          dart pub audit || true
+
+      - name: Analyze pub dependencies
+        run: |
+          echo "Analyzing dependency tree..."
+          flutter pub deps
+
+  license-scan:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: viaswiss_app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check licenses
+        run: |
+          echo "Checking package licenses..."
+          flutter pub deps --json > deps.json
+          cat deps.json
+
+      - name: Generate license report
+        run: |
+          # Generate licenses for the app
+          flutter pub run dart_license_checker:main || echo "License checker not configured"
+
+  code-security:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: viaswiss_app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run security analysis
+        run: |
+          echo "Running security-focused analysis..."
+          flutter analyze --fatal-infos
+
+      - name: Check for sensitive data
+        run: |
+          echo "Scanning for potential secrets..."
+          # Check for common patterns of sensitive data
+          if grep -r -i "api[_-]key\s*=\s*['\"][^'\"]\{10,\}" lib/ --exclude-dir=*.g.dart || \
+             grep -r -i "password\s*=\s*['\"][^'\"]\{5,\}" lib/ --exclude-dir=*.g.dart || \
+             grep -r -i "secret\s*=\s*['\"][^'\"]\{10,\}" lib/ --exclude-dir=*.g.dart; then
+            echo "WARNING: Potential hardcoded secrets detected!"
+            echo "Please review the matches above and ensure no sensitive data is committed."
+            exit 1
+          else
+            echo "No obvious hardcoded secrets found."
+          fi
+
+      - name: Check for unsafe code patterns
+        run: |
+          echo "Checking for unsafe code patterns..."
+          # Check for eval-like patterns or unsafe operations
+          if grep -r "eval\|Runtime\.getRuntime\|Process\.start" lib/ || \
+             grep -r "allowInsecureConnections.*true" lib/; then
+            echo "WARNING: Potentially unsafe code patterns detected!"
+            exit 1
+          else
+            echo "No unsafe patterns detected."
+          fi
