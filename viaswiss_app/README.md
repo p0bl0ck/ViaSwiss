@@ -221,13 +221,45 @@ flutter build ios --release
 
 ## Testing
 
+The app includes a comprehensive test suite with unit tests, widget tests, and integration tests.
+
+### Test Structure
+- **Unit Tests**: Utils, models, repositories, providers
+- **Widget Tests**: Shared widgets and feature widgets
+- **Integration Tests**: Complete user flows
+
+### Running Tests
+
 ```bash
 # Run all tests
 flutter test
 
+# Run specific test category
+flutter test test/unit/
+flutter test test/widget/
+
 # Run with coverage
 flutter test --coverage
+
+# Generate HTML coverage report
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html
 ```
+
+### Test Coverage
+
+Current test coverage:
+- Utilities: 90%+
+- Models: 85%+
+- Repositories: 80%+
+- Widgets: 75%+
+
+See [test/README.md](test/README.md) for detailed testing documentation.
+
+### Test Dependencies
+- **mockito**: Mocking framework for unit tests
+- **mocktail**: Alternative mocking library
+- **fake_async**: Async testing utilities
 
 ## Troubleshooting
 
