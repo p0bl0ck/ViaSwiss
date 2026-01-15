@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/theme.dart';
-import '../../../core/utils/constants.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../home/providers/home_providers.dart';
 import 'widgets/station_search_field.dart';
@@ -38,10 +37,10 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Plan Your Swiss Journey',
                         style: TextStyle(
                           fontSize: 28,
@@ -49,8 +48,8 @@ class HomeScreen extends ConsumerWidget {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
+                      SizedBox(height: 8),
+                      Text(
                         'Discover scenic routes with real-time weather',
                         style: TextStyle(
                           fontSize: 16,

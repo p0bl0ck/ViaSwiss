@@ -53,13 +53,13 @@ void main() {
     });
 
     test('equality works correctly', () {
-      final station1 = Station(
+      final station1 = const Station(
         id: '123',
         name: 'Test',
         coordinates: Coordinates(latitude: 1.0, longitude: 2.0),
       );
 
-      final station2 = Station(
+      final station2 = const Station(
         id: '123',
         name: 'Test',
         coordinates: Coordinates(latitude: 1.0, longitude: 2.0),
@@ -78,14 +78,14 @@ void main() {
 
   group('Coordinates', () {
     test('creates coordinates with latitude and longitude', () {
-      final coords = Coordinates(latitude: 47.3782, longitude: 8.5402);
+      final coords = const Coordinates(latitude: 47.3782, longitude: 8.5402);
 
       expect(coords.latitude, 47.3782);
       expect(coords.longitude, 8.5402);
     });
 
     test('serializes to JSON correctly', () {
-      final coords = Coordinates(latitude: 47.3782, longitude: 8.5402);
+      final coords = const Coordinates(latitude: 47.3782, longitude: 8.5402);
       final json = coords.toJson();
 
       expect(json['latitude'], 47.3782);
@@ -101,14 +101,14 @@ void main() {
     });
 
     test('handles negative coordinates', () {
-      final coords = Coordinates(latitude: -12.34, longitude: -56.78);
+      final coords = const Coordinates(latitude: -12.34, longitude: -56.78);
 
       expect(coords.latitude, -12.34);
       expect(coords.longitude, -56.78);
     });
 
     test('handles zero coordinates', () {
-      final coords = Coordinates(latitude: 0.0, longitude: 0.0);
+      final coords = const Coordinates(latitude: 0.0, longitude: 0.0);
 
       expect(coords.latitude, 0.0);
       expect(coords.longitude, 0.0);
