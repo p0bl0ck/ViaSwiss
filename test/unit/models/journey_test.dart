@@ -169,7 +169,7 @@ void main() {
         from: MockData.zurichHB,
         to: MockData.bern,
         departure: DateTime.now(),
-        arrival: DateTime.now().add(Duration(hours: 1)),
+        arrival: DateTime.now().add(const Duration(hours: 1)),
         platform: '7',
       );
 
@@ -181,7 +181,7 @@ void main() {
         from: MockData.zurichHB,
         to: MockData.bern,
         departure: DateTime.now(),
-        arrival: DateTime.now().add(Duration(hours: 1)),
+        arrival: DateTime.now().add(const Duration(hours: 1)),
         delay: 5,
       );
 
@@ -193,7 +193,7 @@ void main() {
         from: MockData.zurichHB,
         to: MockData.bern,
         departure: DateTime.now(),
-        arrival: DateTime.now().add(Duration(hours: 1)),
+        arrival: DateTime.now().add(const Duration(hours: 1)),
         delay: null,
       );
 

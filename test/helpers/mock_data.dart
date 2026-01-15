@@ -1,31 +1,31 @@
-import '../../lib/features/search/domain/models/station.dart';
-import '../../lib/features/journey/domain/models/journey.dart';
-import '../../lib/features/journey/domain/models/leg.dart';
-import '../../lib/features/journey/domain/models/transport.dart';
-import '../../lib/features/weather/domain/models/weather.dart';
+import 'package:viaswiss_app/features/search/domain/models/station.dart';
+import 'package:viaswiss_app/features/journey/domain/models/journey.dart';
+import 'package:viaswiss_app/features/journey/domain/models/leg.dart';
+import 'package:viaswiss_app/features/journey/domain/models/transport.dart';
+import 'package:viaswiss_app/features/weather/domain/models/weather.dart';
 
 /// Mock data for testing
 class MockData {
   // Mock Stations
-  static final zurichHB = Station(
+  static final zurichHB = const Station(
     id: '8503000',
     name: 'Zürich HB',
     coordinates: Coordinates(latitude: 47.3782, longitude: 8.5402),
   );
 
-  static final bern = Station(
+  static final bern = const Station(
     id: '8507000',
     name: 'Bern',
     coordinates: Coordinates(latitude: 46.9480, longitude: 7.4395),
   );
 
-  static final geneva = Station(
+  static final geneva = const Station(
     id: '8501008',
     name: 'Genève',
     coordinates: Coordinates(latitude: 46.2104, longitude: 6.1430),
   );
 
-  static final interlaken = Station(
+  static final interlaken = const Station(
     id: '8507492',
     name: 'Interlaken Ost',
     coordinates: Coordinates(latitude: 46.6863, longitude: 7.8632),
@@ -39,14 +39,14 @@ class MockData {
       ];
 
   // Mock Transport
-  static final icTransport = Transport(
+  static final icTransport = const Transport(
     type: TransportType.ic,
     number: '1',
     operator: 'SBB',
     line: 'IC 1',
   );
 
-  static final irTransport = Transport(
+  static final irTransport = const Transport(
     type: TransportType.ir,
     number: '15',
     operator: 'SBB',
@@ -140,7 +140,7 @@ class MockData {
     List<WeatherForecast>? forecast,
   }) {
     return Weather(
-      location: location ?? Coordinates(latitude: 47.3782, longitude: 8.5402),
+      location: location ?? const Coordinates(latitude: 47.3782, longitude: 8.5402),
       temperature: temperature ?? 15.5,
       condition: condition ?? WeatherCondition.clear,
       precipitationProbability: precipitationProbability ?? 10,
@@ -152,13 +152,13 @@ class MockData {
 
   static List<WeatherForecast> get mockWeatherForecast => [
         WeatherForecast(
-          timestamp: DateTime.now().add(Duration(hours: 1)),
+          timestamp: DateTime.now().add(const Duration(hours: 1)),
           temperature: 16.0,
           condition: WeatherCondition.clear,
           precipitationProbability: 5,
         ),
         WeatherForecast(
-          timestamp: DateTime.now().add(Duration(hours: 2)),
+          timestamp: DateTime.now().add(const Duration(hours: 2)),
           temperature: 17.0,
           condition: WeatherCondition.partlyCloudy,
           precipitationProbability: 15,

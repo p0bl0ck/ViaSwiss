@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/config/theme.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;

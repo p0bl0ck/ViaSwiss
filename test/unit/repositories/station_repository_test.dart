@@ -110,7 +110,7 @@ void main() {
           options: QueryOptions(document: gql('test')),
           exception: OperationException(
             graphqlErrors: [
-              GraphQLError(message: 'Network error'),
+              const GraphQLError(message: 'Network error'),
             ],
           ),
         );
@@ -206,7 +206,7 @@ void main() {
           options: QueryOptions(document: gql('test')),
           exception: OperationException(
             graphqlErrors: [
-              GraphQLError(message: 'Station not found'),
+              const GraphQLError(message: 'Station not found'),
             ],
           ),
         );
