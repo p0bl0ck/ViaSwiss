@@ -120,8 +120,9 @@ class HomeScreen extends ConsumerWidget {
                           selectedTime.hour,
                           selectedTime.minute,
                         );
-                        ref.read(departureTimeProvider.notifier).state =
-                            combinedDateTime;
+                        ref
+                            .read(departureTimeProvider.notifier)
+                            .setDepartureTime(combinedDateTime);
                       }
                     }
                   },

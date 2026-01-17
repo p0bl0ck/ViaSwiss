@@ -6,7 +6,7 @@ part 'leg.freezed.dart';
 part 'leg.g.dart';
 
 @freezed
-class Leg with _$Leg {
+sealed class Leg with _$Leg {
   const factory Leg({
     required Station from,
     required Station to,

@@ -22,7 +22,7 @@ enum WeatherCondition {
 }
 
 @freezed
-class Weather with _$Weather {
+sealed class Weather with _$Weather {
   const factory Weather({
     required Coordinates location,
     required double temperature,
@@ -38,7 +38,7 @@ class Weather with _$Weather {
 }
 
 @freezed
-class WeatherForecast with _$WeatherForecast {
+sealed class WeatherForecast with _$WeatherForecast {
   const factory WeatherForecast({
     required DateTime timestamp,
     required double temperature,

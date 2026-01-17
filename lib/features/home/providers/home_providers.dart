@@ -1,28 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../search/domain/models/station.dart';
 
-// Selected stations provider
-class SelectedStationsNotifier extends StateNotifier<SelectedStations> {
-  SelectedStationsNotifier()
-      : super(const SelectedStations(from: null, to: null));
-
-  void setFromStation(Station station) {
-    state = state.copyWith(from: station);
-  }
-
-  void setToStation(Station station) {
-    state = state.copyWith(to: station);
-  }
-
-  void swapStations() {
-    state = SelectedStations(from: state.to, to: state.from);
-  }
-
-  void clearStations() {
-    state = const SelectedStations(from: null, to: null);
-  }
-}
-
 class SelectedStations {
   final Station? from;
   final Station? to;
@@ -43,10 +21,43 @@ class SelectedStations {
   }
 }
 
-final selectedStationsProvider =
-    StateNotifierProvider<SelectedStationsNotifier, SelectedStations>((ref) {
-  return SelectedStationsNotifier();
-});
+// Selected stations provider using Notifier (Riverpod 3.x pattern)
+class SelectedStationsNotifier extends Notifier<SelectedStations> {
+  @override
+  SelectedStations build() {
+    return const SelectedStations(from: null, to: null);
+  }
 
-// Departure time provider
-final departureTimeProvider = StateProvider<DateTime?>((ref) => null);
+  void setFromStation(Station station) {
+    state = state.copyWith(from: station);
+  }
+
+  void setToStation(Station station) {
+    state = state.copyWith(to: station);
+  }
+
+  void swapStations() {
+    state = SelectedStations(from: state.to, to: state.from);
+  }
+
+  void clearStations() {
+    state = const SelectedStations(from: null, to: null);
+  }
+}
+
+final selectedStationsProvider =
+    NotifierProvider<SelectedStationsNotifier, SelectedStations>(
+        SelectedStationsNotifier.new);
+
+// Departure time provider using Notifier pattern
+class DepartureTimeNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+
+  void setDepartureTime(DateTime? time) {
+    state = time;
+  }
+}
+
+final departureTimeProvider =
+    NotifierProvider<DepartureTimeNotifier, DateTime?>(DepartureTimeNotifier.new);

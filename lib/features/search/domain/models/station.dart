@@ -4,7 +4,7 @@ part 'station.freezed.dart';
 part 'station.g.dart';
 
 @freezed
-class Station with _$Station {
+sealed class Station with _$Station {
   const factory Station({
     required String id,
     required String name,
@@ -16,7 +16,7 @@ class Station with _$Station {
 }
 
 @freezed
-class Coordinates with _$Coordinates {
+sealed class Coordinates with _$Coordinates {
   const factory Coordinates({
     required double latitude,
     required double longitude,

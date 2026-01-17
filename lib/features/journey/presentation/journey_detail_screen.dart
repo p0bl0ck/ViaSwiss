@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/date_formatter.dart';
 import '../../../shared/widgets/app_button.dart';
-import '../../domain/models/journey.dart';
+import '../domain/models/journey.dart';
 import 'widgets/leg_timeline.dart';
 
 class JourneyDetailScreen extends StatelessWidget {

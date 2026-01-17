@@ -23,7 +23,7 @@ enum TransportType {
 }
 
 @freezed
-class Transport with _$Transport {
+sealed class Transport with _$Transport {
   const factory Transport({
     required TransportType type,
     required String number,

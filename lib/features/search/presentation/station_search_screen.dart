@@ -61,14 +61,15 @@ class _StationSearchScreenState extends ConsumerState<StationSearchScreen> {
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
-                          ref.read(stationSearchQueryProvider.notifier).state =
-                              '';
+                          ref
+                              .read(stationSearchQueryProvider.notifier)
+                              .setQuery('');
                         },
                       )
                     : null,
               ),
               onChanged: (value) {
-                ref.read(stationSearchQueryProvider.notifier).state = value;
+                ref.read(stationSearchQueryProvider.notifier).setQuery(value);
               },
             ),
           ),
