@@ -2,8 +2,11 @@
 
 Complete technical reference for all API endpoints used by the ViaSwiss Flutter application.
 
+> **Note**: This documentation covers all available endpoints. See [Currently Enabled Features](#currently-enabled-features) for active functionality.
+
 ## Table of Contents
 
+- [Currently Enabled Features](#currently-enabled-features)
 - [Overview](#overview)
 - [GraphQL Endpoint](#graphql-endpoint)
 - [Station API](#station-api)
@@ -13,12 +16,22 @@ Complete technical reference for all API endpoints used by the ViaSwiss Flutter 
 - [External APIs](#external-apis)
 - [Error Handling](#error-handling)
 
+## Currently Enabled Features
+
+**Active Features** (as of `lib/core/config/feature_flags.dart`):
+
+- ✅ **Station Search** - `searchStations`, `getStation` queries
+- ✅ **Journey Planning** - `getJourneys`, `getRouteRecommendations` queries
+- ✅ **Weather Integration** (`weatherInfo = true`) - `getWeather` query
+- ❌ **Map Visualization** (`mapView = false`) - MapTiler API disabled
+- ❌ **Popular Routes** (`popularRoutes = false`) - Hardcoded data disabled
+
 ## Overview
 
 ViaSwiss uses a **GraphQL-only architecture** for all backend communication. The app makes read-only queries (no mutations) to fetch:
 - Swiss train station data
 - Journey planning and route information
-- Real-time weather forecasts
+- Real-time weather forecasts (✅ **Enabled**)
 
 ### API Type
 - **Protocol**: GraphQL over HTTP/HTTPS
@@ -736,34 +749,28 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## External APIs
 
-### MapTiler API
+### ❌ MapTiler API (DISABLED)
 
-**Type**: REST API
-**Purpose**: Map tiles and styling for MapLibre GL
-**Status**: Feature currently disabled (`mapView = false`)
+**Status**: ❌ **Feature Disabled** (`mapView = false` in `feature_flags.dart`)
 
-#### Configuration
+The MapTiler API for map visualization is configured but **not currently active**. To enable:
 
-**File**: `lib/core/config/app_config.dart`
+1. Set `mapView = true` in `lib/core/config/feature_flags.dart`
+2. Get free API key from https://www.maptiler.com/
+3. Update `mapStyleUrl` in `lib/core/config/app_config.dart`
+
+**Configuration** (when enabled):
 
 ```dart
 static const String mapStyleUrl =
     'https://api.maptiler.com/maps/basic-v2/style.json?key=YOUR_MAPTILER_KEY';
 ```
 
-#### Setup
+---
 
-1. Create free account at https://www.maptiler.com/
-2. Generate API key
-3. Replace `YOUR_MAPTILER_KEY` in configuration
-4. Enable map feature in `lib/core/config/feature_flags.dart`
+### Active External Services
 
-#### Usage
-
-- **Protocol**: HTTPS
-- **Authentication**: API key in URL parameter
-- **Rate Limits**: Check MapTiler pricing tier
-- **Style Format**: Mapbox GL style JSON
+**None** - The app currently uses **GraphQL exclusively** for all data operations. No external REST APIs are active.
 
 ---
 
@@ -848,27 +855,33 @@ Current API-affecting flags:
 
 ```dart
 class FeatureFlags {
-  static const bool mapView = false;        // MapTiler integration
-  static const bool popularRoutes = false;  // Popular routes (hardcoded)
-  static const bool weatherInfo = true;     // Weather API integration
+  static const bool weatherInfo = true;     // ✅ Weather API integration (ENABLED)
+  static const bool mapView = false;        // ❌ MapTiler integration (DISABLED)
+  static const bool popularRoutes = false;  // ❌ Popular routes (DISABLED - hardcoded data)
 }
 ```
+
+**Impact on API Usage**:
+- **weatherInfo = true**: Enables `getWeather` and `getRouteRecommendations` queries
+- **mapView = false**: Disables MapTiler API calls (no map rendering)
+- **popularRoutes = false**: No API impact (uses hardcoded data when enabled)
 
 ---
 
 ## API Summary
 
-| Endpoint | Method | Purpose | Cache Policy |
-|----------|--------|---------|--------------|
-| `searchStations` | Query | Station autocomplete | networkOnly |
-| `getStation` | Query | Single station details | cacheFirst |
-| `getJourneys` | Query | Journey search | networkOnly |
-| `getRouteRecommendations` | Query | Journey + weather | networkOnly |
-| `getWeather` | Query | Weather forecast | networkOnly |
+| Endpoint | Method | Purpose | Cache Policy | Status |
+|----------|--------|---------|--------------|--------|
+| `searchStations` | Query | Station autocomplete | networkOnly | ✅ Active |
+| `getStation` | Query | Single station details | cacheFirst | ✅ Active |
+| `getJourneys` | Query | Journey search | networkOnly | ✅ Active |
+| `getRouteRecommendations` | Query | Journey + weather | networkOnly | ✅ Active |
+| `getWeather` | Query | Weather forecast | networkOnly | ✅ Active |
 
-**Total GraphQL Queries**: 5
-**Total Mutations**: 0
-**Total External APIs**: 1 (MapTiler, disabled)
+**Active APIs**:
+- **GraphQL Queries**: 5 (all active)
+- **GraphQL Mutations**: 0
+- **External REST APIs**: 0 (MapTiler disabled)
 
 ---
 

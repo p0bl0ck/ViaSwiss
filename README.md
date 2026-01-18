@@ -8,13 +8,17 @@ A modern Flutter mobile application that connects to the ViaSwiss GraphQL backen
 
 ## Features
 
+### Currently Enabled
 - 🔍 **Station Search**: Search and select departure/arrival stations with autocomplete
 - 🚆 **Journey Planning**: Find multiple journey options with connections and transfers
 - ⏰ **Real-time Information**: View departure/arrival times, platforms, and delays
-- 🌤️ **Weather Integration**: Get weather forecasts for your journey
-- 🗺️ **Route Visualization**: View journey routes on an interactive map
+- 🌤️ **Weather Integration**: Get weather forecasts for your journey route
 - 🎨 **Material Design 3**: Modern UI with Swiss railway branding colors
 - 📱 **Responsive**: Works on both iOS and Android devices
+
+### Disabled Features
+- 🗺️ **Route Visualization**: Map view currently disabled (feature flag: `mapView = false`)
+- 📍 **Popular Routes**: Currently disabled (feature flag: `popularRoutes = false`)
 
 ## Architecture
 
@@ -34,11 +38,11 @@ lib/
 
 ### Key Technologies
 
-- **State Management**: Riverpod 2.4
-- **Navigation**: GoRouter 13.0
-- **GraphQL Client**: graphql_flutter 5.1
+- **State Management**: Riverpod 3.1
+- **Navigation**: GoRouter with typed routes
+- **GraphQL Client**: graphql_flutter 5.1 (read-only queries)
 - **Code Generation**: Freezed, JSON Serializable
-- **Maps**: MapLibre GL 0.18
+- **Weather**: Integrated via GraphQL backend
 
 ## Prerequisites
 
@@ -98,17 +102,16 @@ flutter run --dart-define=GRAPHQL_ENDPOINT=http://10.0.2.2:4000/graphql
 
 ## Configuration
 
-### Map Integration
+### Feature Flags
 
-To enable map functionality:
-
-1. Sign up for a free MapTiler account at https://www.maptiler.com/
-2. Get your API key
-3. Update `lib/core/config/app_config.dart`:
+Control app features via `lib/core/config/feature_flags.dart`:
 
 ```dart
-static const String mapStyleUrl =
-  'https://api.maptiler.com/maps/basic-v2/style.json?key=YOUR_API_KEY';
+class FeatureFlags {
+  static bool weatherInfo = true;      // ✅ Enabled - Weather forecasts
+  static bool mapView = false;         // ❌ Disabled - Map visualization
+  static bool popularRoutes = false;   // ❌ Disabled - Popular routes section
+}
 ```
 
 ## Project Structure
@@ -123,7 +126,6 @@ static const String mapStyleUrl =
 
 #### Home
 - Main screen with station search fields
-- Popular routes section
 - Departure time picker
 
 #### Search
@@ -133,17 +135,14 @@ static const String mapStyleUrl =
 #### Journey
 - Journey results list with multiple options
 - Detailed journey view with leg-by-leg information
-- Weather information integration
+- Weather information integration (✅ Enabled)
 - Scenic score display
-
-#### Map
-- Route visualization on interactive map
-- Station markers
-- Journey path display
+- Real-time platform and delay information
 
 #### Weather
 - Weather data models
 - Weather repository for API calls
+- Weather forecast integration with journeys
 - Weather badge widgets
 
 ## State Management
@@ -152,9 +151,8 @@ The app uses Riverpod for state management with providers organized by feature:
 
 - **Home Providers**: Selected stations, departure time
 - **Search Providers**: Search query, search results
-- **Journey Providers**: Journey search params, journey results
+- **Journey Providers**: Journey search params, journey results, route recommendations
 - **Weather Providers**: Weather data by coordinates
-- **Map Providers**: Map state (zoom, center)
 
 ## GraphQL Integration
 
@@ -241,39 +239,33 @@ See `lib/features/*/domain/models/` for model definitions.
 - **Cache storage**: In-memory via graphql_flutter
 - **No offline mode**: Requires active network connection
 
-### External APIs
+### GraphQL Backend Only
 
-#### MapTiler API
+The app uses **GraphQL exclusively** for all backend communication. No external REST APIs are currently active.
 
-- **Type**: REST API for map tiles
-- **Purpose**: Map visualization with MapLibre GL
-- **Configuration**: `lib/core/config/app_config.dart`
-- **Setup**: Get free API key from https://www.maptiler.com/
-- **Status**: Feature disabled (`mapView = false` in feature_flags.dart)
+**Disabled**: MapTiler API for map visualization (feature flag: `mapView = false`)
 
 ## Screens
 
 ### 1. Home Screen
-Entry point with station selection and search button.
+Entry point with station selection fields and search button.
 
 ### 2. Station Search Screen
-Autocomplete search for departure/arrival stations.
+Autocomplete search for departure/arrival stations with real-time results.
 
 ### 3. Journey Results Screen
 List of available journeys with:
 - Departure/arrival times
 - Duration and transfers
 - Scenic score (if available)
+- Weather conditions
 
 ### 4. Journey Detail Screen
 Detailed view of a selected journey:
 - Complete leg-by-leg timeline
-- Train/transport information
+- Train/transport information (IC, IR, RE, S, etc.)
 - Platform numbers and delays
-- Weather information
-
-### 5. Map Screen
-Visual representation of the journey route on a map.
+- Integrated weather forecast
 
 ## Customization
 
@@ -362,16 +354,16 @@ See [test/README.md](test/README.md) for detailed testing documentation.
 2. **GraphQL connection errors**
    - Check backend URL in app_config.dart
    - For Android emulator, use `10.0.2.2` instead of `localhost`
-   - Ensure backend is running
+   - Ensure backend is running and accessible
 
 3. **Code generation fails**
    - Run `flutter clean` and `flutter pub get`
    - Delete all `*.g.dart` and `*.freezed.dart` files
    - Run build_runner again
 
-4. **Map not showing**
-   - Add your MapTiler API key to app_config.dart
-   - MapLibre GL requires additional native setup
+4. **Weather not showing**
+   - Verify `weatherInfo = true` in `lib/core/config/feature_flags.dart`
+   - Check GraphQL backend supports weather queries
 
 ## Future Enhancements
 

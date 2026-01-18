@@ -52,7 +52,7 @@ Clean Architecture with feature-based modules. Each feature follows this structu
 ```
 lib/
 ├── core/
-│   ├── config/app_config.dart    # API endpoints, map keys
+│   ├── config/app_config.dart    # API endpoints
 │   ├── config/theme.dart         # Material 3 theme (SBB colors)
 │   ├── router/app_router.dart    # GoRouter routes
 │   └── utils/                    # Date formatter, constants
@@ -60,8 +60,8 @@ lib/
 │   ├── home/                     # Station selection entry point
 │   ├── search/                   # Station autocomplete search
 │   ├── journey/                  # Journey search & detail views
-│   ├── map/                      # MapLibre route visualization
-│   └── weather/                  # Weather data integration
+│   ├── map/                      # Map feature (DISABLED)
+│   └── weather/                  # Weather data integration (ENABLED)
 └── shared/
     ├── widgets/                  # AppCard, AppButton, etc.
     ├── extensions/
@@ -72,8 +72,8 @@ lib/
 
 - **State Management**: Riverpod 3.x with code generation (`@riverpod` annotations)
 - **Navigation**: GoRouter with typed routes
-- **GraphQL**: graphql_flutter 5.x
-- **Maps**: MapLibre GL (requires MapTiler API key in app_config.dart)
+- **GraphQL**: graphql_flutter 5.x (read-only queries)
+- **Weather**: Integrated via GraphQL backend
 - **Code Generation**: Freezed + JSON Serializable (`.freezed.dart`, `.g.dart` files)
 
 ## Code Generation
@@ -91,8 +91,8 @@ flutter pub run build_runner watch
 ## Configuration
 
 - **GraphQL endpoint**: Set via `--dart-define=GRAPHQL_ENDPOINT=...` or edit `lib/core/config/app_config.dart`
-- **Map tiles**: Add MapTiler API key to `mapStyleUrl` in `lib/core/config/app_config.dart`
 - **Android emulator**: Use `10.0.2.2` instead of `localhost` to access host machine
+- **Feature flags**: Enable/disable features in `lib/core/config/feature_flags.dart`
 
 ## Linting
 
@@ -229,32 +229,15 @@ Riverpod providers handle GraphQL queries:
 - **No mutations**: App is read-only
 - **In-memory cache**: Managed by graphql_flutter
 
-## External APIs
-
-### MapTiler API
-
-**Type**: REST API (static style URL)
-**Purpose**: Map tiles and styling for MapLibre GL
-**Configuration**: `lib/core/config/app_config.dart`
-
-```dart
-static const String mapStyleUrl =
-    'https://api.maptiler.com/maps/basic-v2/style.json?key=YOUR_KEY';
-```
-
-**Setup**:
-1. Get free API key from https://www.maptiler.com/
-2. Replace `YOUR_KEY` in `mapStyleUrl`
-
-**Status**: Currently disabled via feature flag (`mapView = false`)
-
-## Feature Flags
+## Currently Enabled Features
 
 **File**: `lib/core/config/feature_flags.dart`
 
-- `mapView = false` - Map visualization disabled
-- `popularRoutes = false` - Popular routes section disabled
-- `weatherInfo = true` - Weather integration enabled
+- ✅ **Station Search** - Full autocomplete and search functionality
+- ✅ **Journey Planning** - Multi-leg journey search with transfers
+- ✅ **Weather Integration** (`weatherInfo = true`) - Real-time weather forecasts
+- ❌ **Map Visualization** (`mapView = false`) - Disabled
+- ❌ **Popular Routes** (`popularRoutes = false`) - Disabled
 
 ## Key Files Reference
 
