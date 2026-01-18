@@ -8,13 +8,17 @@ A modern Flutter mobile application that connects to the ViaSwiss GraphQL backen
 
 ## Features
 
+### Currently Enabled
 - 🔍 **Station Search**: Search and select departure/arrival stations with autocomplete
 - 🚆 **Journey Planning**: Find multiple journey options with connections and transfers
 - ⏰ **Real-time Information**: View departure/arrival times, platforms, and delays
-- 🌤️ **Weather Integration**: Get weather forecasts for your journey
-- 🗺️ **Route Visualization**: View journey routes on an interactive map
+- 🌤️ **Weather Integration**: Get weather forecasts for your journey route
 - 🎨 **Material Design 3**: Modern UI with Swiss railway branding colors
 - 📱 **Responsive**: Works on both iOS and Android devices
+
+### Disabled Features
+- 🗺️ **Route Visualization**: Map view currently disabled (feature flag: `mapView = false`)
+- 📍 **Popular Routes**: Currently disabled (feature flag: `popularRoutes = false`)
 
 ## Architecture
 
@@ -34,11 +38,11 @@ lib/
 
 ### Key Technologies
 
-- **State Management**: Riverpod 2.4
-- **Navigation**: GoRouter 13.0
-- **GraphQL Client**: graphql_flutter 5.1
+- **State Management**: Riverpod 3.1
+- **Navigation**: GoRouter with typed routes
+- **GraphQL Client**: graphql_flutter 5.1 (read-only queries)
 - **Code Generation**: Freezed, JSON Serializable
-- **Maps**: MapLibre GL 0.18
+- **Weather**: Integrated via GraphQL backend
 
 ## Prerequisites
 
@@ -98,17 +102,16 @@ flutter run --dart-define=GRAPHQL_ENDPOINT=http://10.0.2.2:4000/graphql
 
 ## Configuration
 
-### Map Integration
+### Feature Flags
 
-To enable map functionality:
-
-1. Sign up for a free MapTiler account at https://www.maptiler.com/
-2. Get your API key
-3. Update `lib/core/config/app_config.dart`:
+Control app features via `lib/core/config/feature_flags.dart`:
 
 ```dart
-static const String mapStyleUrl =
-  'https://api.maptiler.com/maps/basic-v2/style.json?key=YOUR_API_KEY';
+class FeatureFlags {
+  static bool weatherInfo = true;      // ✅ Enabled - Weather forecasts
+  static bool mapView = false;         // ❌ Disabled - Map visualization
+  static bool popularRoutes = false;   // ❌ Disabled - Popular routes section
+}
 ```
 
 ## Project Structure
@@ -123,7 +126,6 @@ static const String mapStyleUrl =
 
 #### Home
 - Main screen with station search fields
-- Popular routes section
 - Departure time picker
 
 #### Search
@@ -133,17 +135,14 @@ static const String mapStyleUrl =
 #### Journey
 - Journey results list with multiple options
 - Detailed journey view with leg-by-leg information
-- Weather information integration
+- Weather information integration (✅ Enabled)
 - Scenic score display
-
-#### Map
-- Route visualization on interactive map
-- Station markers
-- Journey path display
+- Real-time platform and delay information
 
 #### Weather
 - Weather data models
 - Weather repository for API calls
+- Weather forecast integration with journeys
 - Weather badge widgets
 
 ## State Management
@@ -152,9 +151,8 @@ The app uses Riverpod for state management with providers organized by feature:
 
 - **Home Providers**: Selected stations, departure time
 - **Search Providers**: Search query, search results
-- **Journey Providers**: Journey search params, journey results
+- **Journey Providers**: Journey search params, journey results, route recommendations
 - **Weather Providers**: Weather data by coordinates
-- **Map Providers**: Map state (zoom, center)
 
 ## GraphQL Integration
 
@@ -164,29 +162,110 @@ All GraphQL queries are defined in `data/graphql/` folders within each feature:
 - **Journey Queries**: Get journeys, route recommendations
 - **Weather Queries**: Get weather by coordinates
 
+### API Endpoint Details
+
+#### GraphQL Endpoint
+
+**Default**: `http://10.0.2.2:4000/graphql` (Android emulator)
+**Configuration**: `lib/core/config/app_config.dart`
+
+The app uses a **read-only GraphQL API** (queries only, no mutations).
+
+#### Station API
+
+**Query: `searchStations`** (`lib/features/search/data/graphql/station_queries.dart`)
+- **Purpose**: Autocomplete search for train stations
+- **Variables**:
+  - `query` (String, required) - Search term
+  - `limit` (Int, optional) - Results limit (default: 10)
+- **Returns**: Array of stations with `id`, `name`, `coordinates` (lat/lng)
+
+**Query: `getStation`**
+- **Purpose**: Fetch single station by ID
+- **Variables**: `id` (ID, required)
+- **Returns**: Single station object
+
+#### Journey API
+
+**Query: `getJourneys`** (`lib/features/journey/data/graphql/journey_queries.dart`)
+- **Purpose**: Search train journeys between stations
+- **Variables**:
+  - `from` (ID, required) - Departure station ID
+  - `to` (ID, required) - Arrival station ID
+  - `departureTime` (String, optional) - ISO8601 timestamp
+  - `limit` (Int, optional) - Max journeys (default: 5)
+- **Returns**: Journey array with:
+  - Basic info: `id`, `from`, `to`, `departure`, `arrival`
+  - Metrics: `duration` (minutes), `transfers`, `scenicScore` (0-100)
+  - Details: `legs` array with segments, platforms, delays, transport info
+
+**Transport Types**: IC (Intercity), IR (Interregio), RE (Regional Express), S (S-Bahn), ICE (InterCityExpress), EC (EuroCity), BUS, TRAM
+
+**Query: `getRouteRecommendations`**
+- **Purpose**: Get journeys with weather forecasts and AI recommendations
+- **Variables**: Same as `getJourneys`
+- **Returns**: `RouteRecommendation` with:
+  - `journey` - Full journey object
+  - `weather` - Weather forecast for route
+  - `warnings` - Array of travel warnings
+  - `recommendation` - AI-generated travel advice
+
+#### Weather API
+
+**Query: `getWeather`** (`lib/features/weather/data/graphql/weather_queries.dart`)
+- **Purpose**: Get weather data for coordinates
+- **Variables**: `latitude`, `longitude` (Float, required)
+- **Returns**: Weather data with:
+  - Current: `temperature` (°C), `condition`, `precipitationProbability` (%), `windSpeed` (km/h)
+  - Conditions: CLEAR, PARTLY_CLOUDY, CLOUDY, RAINY, SNOWY, STORMY, FOGGY
+  - Forecast: Array of future weather entries
+
+#### Data Models
+
+All models use Freezed with JSON serialization:
+- `Station` - Station info with coordinates
+- `Journey` - Complete journey with legs and transfers
+- `Leg` - Journey segment with transport details
+- `Transport` - Train/bus info (type, number, operator)
+- `Weather` - Current weather and forecast
+- `RouteRecommendation` - Journey + weather + recommendations
+
+See `lib/features/*/domain/models/` for model definitions.
+
+#### Cache Policies
+
+- **Search queries**: `networkOnly` (always fresh)
+- **Single entities**: `cacheFirst` (cached when available)
+- **Cache storage**: In-memory via graphql_flutter
+- **No offline mode**: Requires active network connection
+
+### GraphQL Backend Only
+
+The app uses **GraphQL exclusively** for all backend communication. No external REST APIs are currently active.
+
+**Disabled**: MapTiler API for map visualization (feature flag: `mapView = false`)
+
 ## Screens
 
 ### 1. Home Screen
-Entry point with station selection and search button.
+Entry point with station selection fields and search button.
 
 ### 2. Station Search Screen
-Autocomplete search for departure/arrival stations.
+Autocomplete search for departure/arrival stations with real-time results.
 
 ### 3. Journey Results Screen
 List of available journeys with:
 - Departure/arrival times
 - Duration and transfers
 - Scenic score (if available)
+- Weather conditions
 
 ### 4. Journey Detail Screen
 Detailed view of a selected journey:
 - Complete leg-by-leg timeline
-- Train/transport information
+- Train/transport information (IC, IR, RE, S, etc.)
 - Platform numbers and delays
-- Weather information
-
-### 5. Map Screen
-Visual representation of the journey route on a map.
+- Integrated weather forecast
 
 ## Customization
 
@@ -275,16 +354,16 @@ See [test/README.md](test/README.md) for detailed testing documentation.
 2. **GraphQL connection errors**
    - Check backend URL in app_config.dart
    - For Android emulator, use `10.0.2.2` instead of `localhost`
-   - Ensure backend is running
+   - Ensure backend is running and accessible
 
 3. **Code generation fails**
    - Run `flutter clean` and `flutter pub get`
    - Delete all `*.g.dart` and `*.freezed.dart` files
    - Run build_runner again
 
-4. **Map not showing**
-   - Add your MapTiler API key to app_config.dart
-   - MapLibre GL requires additional native setup
+4. **Weather not showing**
+   - Verify `weatherInfo = true` in `lib/core/config/feature_flags.dart`
+   - Check GraphQL backend supports weather queries
 
 ## Future Enhancements
 

@@ -52,7 +52,7 @@ Clean Architecture with feature-based modules. Each feature follows this structu
 ```
 lib/
 ├── core/
-│   ├── config/app_config.dart    # API endpoints, map keys
+│   ├── config/app_config.dart    # API endpoints
 │   ├── config/theme.dart         # Material 3 theme (SBB colors)
 │   ├── router/app_router.dart    # GoRouter routes
 │   └── utils/                    # Date formatter, constants
@@ -60,8 +60,8 @@ lib/
 │   ├── home/                     # Station selection entry point
 │   ├── search/                   # Station autocomplete search
 │   ├── journey/                  # Journey search & detail views
-│   ├── map/                      # MapLibre route visualization
-│   └── weather/                  # Weather data integration
+│   ├── map/                      # Map feature (DISABLED)
+│   └── weather/                  # Weather data integration (ENABLED)
 └── shared/
     ├── widgets/                  # AppCard, AppButton, etc.
     ├── extensions/
@@ -72,8 +72,8 @@ lib/
 
 - **State Management**: Riverpod 3.x with code generation (`@riverpod` annotations)
 - **Navigation**: GoRouter with typed routes
-- **GraphQL**: graphql_flutter 5.x
-- **Maps**: MapLibre GL (requires MapTiler API key in app_config.dart)
+- **GraphQL**: graphql_flutter 5.x (read-only queries)
+- **Weather**: Integrated via GraphQL backend
 - **Code Generation**: Freezed + JSON Serializable (`.freezed.dart`, `.g.dart` files)
 
 ## Code Generation
@@ -91,8 +91,8 @@ flutter pub run build_runner watch
 ## Configuration
 
 - **GraphQL endpoint**: Set via `--dart-define=GRAPHQL_ENDPOINT=...` or edit `lib/core/config/app_config.dart`
-- **Map tiles**: Add MapTiler API key to `mapStyleUrl` in `lib/core/config/app_config.dart`
 - **Android emulator**: Use `10.0.2.2` instead of `localhost` to access host machine
+- **Feature flags**: Enable/disable features in `lib/core/config/feature_flags.dart`
 
 ## Linting
 
@@ -109,3 +109,145 @@ Test helpers in `test/helpers/`:
 - `test_helpers.dart` - `wrapWithProviders()`, `wrapWithMaterialApp()`
 
 Test structure mirrors `lib/` structure under `test/unit/`, `test/widget/`, and `test/integration/`.
+
+## GraphQL API Endpoints
+
+The app uses a GraphQL backend exclusively for all data operations (read-only, no mutations).
+
+### Endpoint Configuration
+
+**File**: `lib/core/config/app_config.dart`
+
+```dart
+static const String graphqlEndpoint = String.fromEnvironment(
+  'GRAPHQL_ENDPOINT',
+  defaultValue: 'http://10.0.2.2:4000/graphql',  // Android emulator
+);
+```
+
+**Runtime override**:
+```bash
+flutter run --dart-define=GRAPHQL_ENDPOINT=https://your-backend.com/graphql
+```
+
+### Station Queries
+
+**File**: `lib/features/search/data/graphql/station_queries.dart`
+
+#### searchStations
+Search for train stations with autocomplete.
+
+**Variables**:
+- `query` (String, required): Search term
+- `limit` (Int, optional): Number of results (default: 10)
+
+**Returns**: Array of `Station` with `id`, `name`, `coordinates` (latitude, longitude)
+
+#### getStation
+Fetch a single station by ID.
+
+**Variables**:
+- `id` (ID, required): Station ID
+
+**Returns**: Single `Station` object
+
+### Journey Queries
+
+**File**: `lib/features/journey/data/graphql/journey_queries.dart`
+
+#### getJourneys
+Search for train journeys between two stations.
+
+**Variables**:
+- `from` (ID, required): Departure station ID
+- `to` (ID, required): Arrival station ID
+- `departureTime` (String, optional): ISO8601 departure time
+- `limit` (Int, optional): Max journeys (default: 5)
+
+**Returns**: Array of `Journey` with:
+- `id`, `from`, `to` (Station objects)
+- `departure`, `arrival` (DateTime)
+- `duration` (minutes), `transfers` (count)
+- `scenicScore` (0-100, optional)
+- `legs` (Array of journey segments with `platform`, `delay`, `transport`)
+
+**Transport types**: IC, IR, RE, S, ICE, EC, BUS, TRAM
+
+#### getRouteRecommendations
+Get journeys with weather forecasts and travel recommendations.
+
+**Variables**:
+- `from` (ID, required): Departure station ID
+- `to` (ID, required): Arrival station ID
+- `departureTime` (String, optional): ISO8601 departure time
+
+**Returns**: `RouteRecommendation` with:
+- `journey` (Journey object)
+- `weather` (Weather forecast)
+- `warnings` (Array of strings)
+- `recommendation` (String, AI-generated advice)
+
+### Weather Queries
+
+**File**: `lib/features/weather/data/graphql/weather_queries.dart`
+
+#### getWeather
+Get weather data for specific coordinates.
+
+**Variables**:
+- `latitude` (Float, required)
+- `longitude` (Float, required)
+
+**Returns**: `Weather` with:
+- `location` (Coordinates)
+- `temperature` (Celsius)
+- `condition` (Enum: CLEAR, PARTLY_CLOUDY, CLOUDY, RAINY, SNOWY, STORMY, FOGGY)
+- `precipitationProbability` (0-100%)
+- `windSpeed` (km/h, optional)
+- `timestamp` (DateTime)
+- `forecast` (Array of future weather entries)
+
+### Data Models
+
+All models use Freezed with JSON serialization:
+- `Station` - `lib/features/search/domain/models/station.dart`
+- `Journey`, `Leg`, `Transport` - `lib/features/journey/domain/models/`
+- `Weather`, `WeatherForecast` - `lib/features/weather/domain/models/weather.dart`
+- `RouteRecommendation` - `lib/features/journey/domain/models/route_recommendation.dart`
+
+### State Management
+
+Riverpod providers handle GraphQL queries:
+- `stationSearchResultsProvider` - Executes searchStations
+- `journeysProvider` - Executes getJourneys
+- `routeRecommendationsProvider` - Executes getRouteRecommendations
+- `weatherProvider` - Executes getWeather
+
+### Cache Policies
+
+- **Queries**: `cacheFirst` for single entities, `networkOnly` for search/lists
+- **No mutations**: App is read-only
+- **In-memory cache**: Managed by graphql_flutter
+
+## Currently Enabled Features
+
+**File**: `lib/core/config/feature_flags.dart`
+
+- ✅ **Station Search** - Full autocomplete and search functionality
+- ✅ **Journey Planning** - Multi-leg journey search with transfers
+- ✅ **Weather Integration** (`weatherInfo = true`) - Real-time weather forecasts
+- ❌ **Map Visualization** (`mapView = false`) - Disabled
+- ❌ **Popular Routes** (`popularRoutes = false`) - Disabled
+
+## Key Files Reference
+
+| Purpose | File Path |
+|---------|-----------|
+| GraphQL Client | `lib/shared/graphql/graphql_client.dart` |
+| API Config | `lib/core/config/app_config.dart` |
+| Station Queries | `lib/features/search/data/graphql/station_queries.dart` |
+| Journey Queries | `lib/features/journey/data/graphql/journey_queries.dart` |
+| Weather Queries | `lib/features/weather/data/graphql/weather_queries.dart` |
+| Station Repository | `lib/features/search/data/repositories/station_repository.dart` |
+| Journey Repository | `lib/features/journey/data/repositories/journey_repository.dart` |
+| Weather Repository | `lib/features/weather/data/repositories/weather_repository.dart` |
