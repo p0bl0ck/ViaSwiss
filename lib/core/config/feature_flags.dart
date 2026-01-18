@@ -26,7 +26,7 @@ class FeatureFlags {
   static bool weatherInfo = true;
 
   /// Enable map view for journey visualization.
-  static bool mapView = true;
+  static bool mapView = false;
 
   // ============================================
   // RUNTIME CONFIGURATION

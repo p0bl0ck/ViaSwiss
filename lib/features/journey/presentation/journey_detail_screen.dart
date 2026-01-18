@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/config/feature_flags.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/date_formatter.dart';
 import '../../../core/utils/logger.dart';
@@ -33,12 +34,13 @@ class JourneyDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Journey Details'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.map),
-            onPressed: () {
-              context.push('/map', extra: journey);
-            },
-          ),
+          if (FeatureFlags.mapView)
+            IconButton(
+              icon: const Icon(Icons.map),
+              onPressed: () {
+                context.push('/map', extra: journey);
+              },
+            ),
         ],
       ),
       body: Column(
