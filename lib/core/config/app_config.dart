@@ -2,7 +2,7 @@ class AppConfig {
   // GraphQL API Endpoint
   static const String graphqlEndpoint = String.fromEnvironment(
     'GRAPHQL_ENDPOINT',
-    defaultValue: 'http://localhost:4000/graphql', // Local development
+    defaultValue: 'http://10.0.2.2:4000/graphql', // Local development
     // defaultValue: 'https://your-app.railway.app/graphql', // Production
   );
 
