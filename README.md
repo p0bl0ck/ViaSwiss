@@ -164,6 +164,93 @@ All GraphQL queries are defined in `data/graphql/` folders within each feature:
 - **Journey Queries**: Get journeys, route recommendations
 - **Weather Queries**: Get weather by coordinates
 
+### API Endpoint Details
+
+#### GraphQL Endpoint
+
+**Default**: `http://10.0.2.2:4000/graphql` (Android emulator)
+**Configuration**: `lib/core/config/app_config.dart`
+
+The app uses a **read-only GraphQL API** (queries only, no mutations).
+
+#### Station API
+
+**Query: `searchStations`** (`lib/features/search/data/graphql/station_queries.dart`)
+- **Purpose**: Autocomplete search for train stations
+- **Variables**:
+  - `query` (String, required) - Search term
+  - `limit` (Int, optional) - Results limit (default: 10)
+- **Returns**: Array of stations with `id`, `name`, `coordinates` (lat/lng)
+
+**Query: `getStation`**
+- **Purpose**: Fetch single station by ID
+- **Variables**: `id` (ID, required)
+- **Returns**: Single station object
+
+#### Journey API
+
+**Query: `getJourneys`** (`lib/features/journey/data/graphql/journey_queries.dart`)
+- **Purpose**: Search train journeys between stations
+- **Variables**:
+  - `from` (ID, required) - Departure station ID
+  - `to` (ID, required) - Arrival station ID
+  - `departureTime` (String, optional) - ISO8601 timestamp
+  - `limit` (Int, optional) - Max journeys (default: 5)
+- **Returns**: Journey array with:
+  - Basic info: `id`, `from`, `to`, `departure`, `arrival`
+  - Metrics: `duration` (minutes), `transfers`, `scenicScore` (0-100)
+  - Details: `legs` array with segments, platforms, delays, transport info
+
+**Transport Types**: IC (Intercity), IR (Interregio), RE (Regional Express), S (S-Bahn), ICE (InterCityExpress), EC (EuroCity), BUS, TRAM
+
+**Query: `getRouteRecommendations`**
+- **Purpose**: Get journeys with weather forecasts and AI recommendations
+- **Variables**: Same as `getJourneys`
+- **Returns**: `RouteRecommendation` with:
+  - `journey` - Full journey object
+  - `weather` - Weather forecast for route
+  - `warnings` - Array of travel warnings
+  - `recommendation` - AI-generated travel advice
+
+#### Weather API
+
+**Query: `getWeather`** (`lib/features/weather/data/graphql/weather_queries.dart`)
+- **Purpose**: Get weather data for coordinates
+- **Variables**: `latitude`, `longitude` (Float, required)
+- **Returns**: Weather data with:
+  - Current: `temperature` (°C), `condition`, `precipitationProbability` (%), `windSpeed` (km/h)
+  - Conditions: CLEAR, PARTLY_CLOUDY, CLOUDY, RAINY, SNOWY, STORMY, FOGGY
+  - Forecast: Array of future weather entries
+
+#### Data Models
+
+All models use Freezed with JSON serialization:
+- `Station` - Station info with coordinates
+- `Journey` - Complete journey with legs and transfers
+- `Leg` - Journey segment with transport details
+- `Transport` - Train/bus info (type, number, operator)
+- `Weather` - Current weather and forecast
+- `RouteRecommendation` - Journey + weather + recommendations
+
+See `lib/features/*/domain/models/` for model definitions.
+
+#### Cache Policies
+
+- **Search queries**: `networkOnly` (always fresh)
+- **Single entities**: `cacheFirst` (cached when available)
+- **Cache storage**: In-memory via graphql_flutter
+- **No offline mode**: Requires active network connection
+
+### External APIs
+
+#### MapTiler API
+
+- **Type**: REST API for map tiles
+- **Purpose**: Map visualization with MapLibre GL
+- **Configuration**: `lib/core/config/app_config.dart`
+- **Setup**: Get free API key from https://www.maptiler.com/
+- **Status**: Feature disabled (`mapView = false` in feature_flags.dart)
+
 ## Screens
 
 ### 1. Home Screen
