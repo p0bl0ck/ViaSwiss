@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/constants.dart';
+import '../../../core/utils/logger.dart';
 import '../../../shared/widgets/loading_indicator.dart';
 import '../../../shared/widgets/error_widget.dart';
 import '../../home/providers/home_providers.dart';
@@ -39,7 +40,18 @@ class _StationSearchScreenState extends ConsumerState<StationSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final searchQuery = ref.watch(stationSearchQueryProvider);
     final searchResults = ref.watch(stationSearchResultsProvider);
+
+    AppLogger.screen('StationSearchScreen', {
+      'isFromStation': widget.isFromStation,
+      'searchQuery': searchQuery,
+      'searchResults': searchResults.when(
+        data: (stations) => '${stations.length} stations',
+        loading: () => 'loading...',
+        error: (e, _) => 'error: $e',
+      ),
+    });
 
     return Scaffold(
       appBar: AppBar(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/date_formatter.dart';
+import '../../../core/utils/logger.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../domain/models/journey.dart';
 import 'widgets/leg_timeline.dart';
@@ -16,6 +17,18 @@ class JourneyDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLogger.screen('JourneyDetailScreen', {
+      'journey.id': journey.id,
+      'journey.from': journey.from.name,
+      'journey.to': journey.to.name,
+      'journey.departure': journey.departure.toIso8601String(),
+      'journey.arrival': journey.arrival.toIso8601String(),
+      'journey.duration': '${journey.duration} min',
+      'journey.transfers': journey.transfers,
+      'journey.legs': journey.legs.length,
+      'journey.scenicScore': journey.scenicScore,
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Journey Details'),

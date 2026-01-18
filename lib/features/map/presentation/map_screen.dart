@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/date_formatter.dart';
+import '../../../core/utils/logger.dart';
 import '../../journey/domain/models/journey.dart';
 import 'widgets/route_map.dart';
 
@@ -14,6 +15,15 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLogger.screen('MapScreen', {
+      'journey.id': journey.id,
+      'journey.from': journey.from.name,
+      'journey.from.coordinates': '${journey.from.coordinates.latitude}, ${journey.from.coordinates.longitude}',
+      'journey.to': journey.to.name,
+      'journey.to.coordinates': '${journey.to.coordinates.latitude}, ${journey.to.coordinates.longitude}',
+      'journey.legs': journey.legs.length,
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Route Map'),

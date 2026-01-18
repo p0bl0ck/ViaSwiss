@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/constants.dart';
+import '../../../core/utils/logger.dart';
 import '../../../shared/widgets/loading_indicator.dart';
 import '../../../shared/widgets/error_widget.dart';
 import '../providers/journey_providers.dart';
@@ -33,6 +34,19 @@ class JourneyResultsScreen extends ConsumerWidget {
     );
 
     final journeys = ref.watch(journeysProvider(params));
+
+    AppLogger.screen('JourneyResultsScreen', {
+      'fromId': fromId,
+      'fromName': fromName,
+      'toId': toId,
+      'toName': toName,
+      'departureTime': departureTime.toIso8601String(),
+      'journeys': journeys.when(
+        data: (list) => '${list.length} journeys found',
+        loading: () => 'loading...',
+        error: (e, _) => 'error: $e',
+      ),
+    });
 
     return Scaffold(
       appBar: AppBar(

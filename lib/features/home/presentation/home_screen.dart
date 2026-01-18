@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/theme.dart';
+import '../../../core/utils/logger.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../home/providers/home_providers.dart';
 import 'widgets/station_search_field.dart';
@@ -14,6 +15,12 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedStations = ref.watch(selectedStationsProvider);
     final departureTime = ref.watch(departureTimeProvider);
+
+    AppLogger.screen('HomeScreen', {
+      'selectedStations.from': selectedStations.from?.name ?? 'null',
+      'selectedStations.to': selectedStations.to?.name ?? 'null',
+      'departureTime': departureTime?.toIso8601String() ?? 'null (Now)',
+    });
 
     return Scaffold(
       appBar: AppBar(
