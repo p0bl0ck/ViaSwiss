@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/config/feature_flags.dart';
 import '../../../core/config/theme.dart';
 import '../../../core/utils/logger.dart';
 import '../../../shared/widgets/app_button.dart';
@@ -183,10 +184,11 @@ class HomeScreen extends ConsumerWidget {
                         }
                       : null,
                 ),
-                const SizedBox(height: 40),
-
-                // Popular routes
-                const PopularRoutesSection(),
+                // Popular routes (feature flagged)
+                if (FeatureFlags.popularRoutes) ...[
+                  const SizedBox(height: 40),
+                  const PopularRoutesSection(),
+                ],
               ],
             ),
           ),
