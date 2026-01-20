@@ -17,7 +17,7 @@ class StationRepository {
           'query': query,
           'limit': limit,
         },
-        fetchPolicy: FetchPolicy.networkOnly, // Always fresh for search
+        fetchPolicy: FetchPolicy.networkOnly,
       ),
     );
 
@@ -27,25 +27,6 @@ class StationRepository {
 
     final List<dynamic> stations = result.data?['searchStations'] ?? [];
     return stations.map((json) => Station.fromJson(json)).toList();
-  }
-
-  Future<Station?> getStation(String id) async {
-    final result = await _client.query(
-      QueryOptions(
-        document: gql(getStationQuery),
-        variables: {'id': id},
-        fetchPolicy: FetchPolicy.cacheFirst,
-      ),
-    );
-
-    if (result.hasException) {
-      throw result.exception!;
-    }
-
-    final stationJson = result.data?['station'];
-    if (stationJson == null) return null;
-
-    return Station.fromJson(stationJson);
   }
 }
 

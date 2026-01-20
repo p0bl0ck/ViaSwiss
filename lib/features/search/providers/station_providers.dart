@@ -28,10 +28,3 @@ final stationSearchResultsProvider =
   final repository = ref.watch(stationRepositoryProvider);
   return repository.searchStations(query, limit: 10);
 });
-
-// Single station provider
-final stationProvider =
-    FutureProvider.autoDispose.family<Station?, String>((ref, id) async {
-  final repository = ref.watch(stationRepositoryProvider);
-  return repository.getStation(id);
-});

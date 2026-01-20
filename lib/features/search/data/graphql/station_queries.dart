@@ -10,16 +10,3 @@ const String searchStationsQuery = r'''
     }
   }
 ''';
-
-const String getStationQuery = r'''
-  query GetStation($id: ID!) {
-    station(id: $id) {
-      id
-      name
-      coordinates {
-        latitude
-        longitude
-      }
-    }
-  }
-''';
