@@ -2,9 +2,9 @@ name: Security Scan
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master ]
   schedule:
     # Run weekly on Monday at 00:00 UTC
     - cron: '0 0 * * 1'
@@ -14,9 +14,6 @@ jobs:
   dependency-scan:
     name: Dependency Vulnerability Scan
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: viaswiss_app
 
     steps:
       - name: Checkout code
@@ -45,9 +42,6 @@ jobs:
   license-scan:
     name: License Compliance Check
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: viaswiss_app
 
     steps:
       - name: Checkout code
@@ -77,9 +71,6 @@ jobs:
   code-security:
     name: Code Security Analysis
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: viaswiss_app
 
     steps:
       - name: Checkout code
