@@ -6,6 +6,7 @@ import '../../features/journey/presentation/journey_results_screen.dart';
 import '../../features/journey/presentation/journey_detail_screen.dart';
 import '../../features/map/presentation/map_screen.dart';
 import '../../features/journey/domain/models/journey.dart';
+import '../../features/journey/domain/models/route_recommendation.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -49,8 +50,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/journey-detail',
         name: 'journeyDetail',
         builder: (context, state) {
-          final journey = state.extra as Journey;
-          return JourneyDetailScreen(journey: journey);
+          final recommendation = state.extra as RouteRecommendation;
+          return JourneyDetailScreen(recommendation: recommendation);
         },
       ),
       GoRoute(

@@ -33,7 +33,7 @@ class JourneyResultsScreen extends ConsumerWidget {
       departureTime: departureTime,
     );
 
-    final journeys = ref.watch(journeysProvider(params));
+    final recommendations = ref.watch(routeRecommendationsProvider(params));
 
     AppLogger.screen('JourneyResultsScreen', {
       'fromId': fromId,
@@ -41,7 +41,7 @@ class JourneyResultsScreen extends ConsumerWidget {
       'toId': toId,
       'toName': toName,
       'departureTime': departureTime.toIso8601String(),
-      'journeys': journeys.when(
+      'journeys': recommendations.when(
         data: (list) => '${list.length} journeys found',
         loading: () => 'loading...',
         error: (e, _) => 'error: $e',
@@ -112,9 +112,9 @@ class JourneyResultsScreen extends ConsumerWidget {
 
           // Journey list
           Expanded(
-            child: journeys.when(
-              data: (journeyList) {
-                if (journeyList.isEmpty) {
+            child: recommendations.when(
+              data: (recommendationList) {
+                if (recommendationList.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -139,13 +139,13 @@ class JourneyResultsScreen extends ConsumerWidget {
 
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: journeyList.length,
+                  itemCount: recommendationList.length,
                   itemBuilder: (context, index) {
-                    final journey = journeyList[index];
+                    final recommendation = recommendationList[index];
                     return JourneyCard(
-                      journey: journey,
+                      journey: recommendation.journey,
                       onTap: () {
-                        context.push('/journey-detail', extra: journey);
+                        context.push('/journey-detail', extra: recommendation);
                       },
                     );
                   },
@@ -157,7 +157,7 @@ class JourneyResultsScreen extends ConsumerWidget {
               error: (error, stack) => AppErrorWidget(
                 message: error.toString(),
                 onRetry: () {
-                  ref.invalidate(journeysProvider(params));
+                  ref.invalidate(routeRecommendationsProvider(params));
                 },
               ),
             ),

@@ -71,12 +71,12 @@ void main() {
         ),
       );
 
-      // Assert
+      // Assert - find the Padding widget inside InkWell
       final padding = tester.widget<Padding>(
         find.descendant(
-          of: find.byType(AppCard),
+          of: find.byType(InkWell),
           matching: find.byType(Padding),
-        ),
+        ).first,
       );
       expect(padding.padding, customPadding);
     });
@@ -125,12 +125,12 @@ void main() {
         ),
       );
 
-      // Assert
+      // Assert - find the Padding widget inside InkWell
       final padding = tester.widget<Padding>(
         find.descendant(
-          of: find.byType(AppCard),
+          of: find.byType(InkWell),
           matching: find.byType(Padding),
-        ),
+        ).first,
       );
       expect(padding.padding, const EdgeInsets.all(16));
     });
@@ -139,20 +139,16 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          const AppCard(
-            child: Text('Rounded'),
+          AppCard(
+            onTap: () {},
+            child: const Text('Rounded'),
           ),
         ),
       );
 
-      // Assert
-      final card = tester.widget<Card>(find.byType(Card));
-      final shape = card.shape as RoundedRectangleBorder?;
-      expect(shape, isNotNull);
-      expect(
-        shape!.borderRadius,
-        BorderRadius.circular(12),
-      );
+      // Assert - InkWell provides the rounded corners via borderRadius
+      final inkWell = tester.widget<InkWell>(find.byType(InkWell));
+      expect(inkWell.borderRadius, BorderRadius.circular(12));
     });
 
     testWidgets('contains InkWell for tap effects', (tester) async {

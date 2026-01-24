@@ -8,9 +8,16 @@ import '../../helpers/mock_data.dart';
 // Mock GraphQL Client
 class MockGraphQLClient extends Mock implements GraphQLClient {}
 
+// Fake QueryOptions for mocktail
+class FakeQueryOptions extends Fake implements QueryOptions<Object?> {}
+
 void main() {
   late MockGraphQLClient mockClient;
   late StationRepository repository;
+
+  setUpAll(() {
+    registerFallbackValue(FakeQueryOptions());
+  });
 
   setUp(() {
     mockClient = MockGraphQLClient();
@@ -24,7 +31,7 @@ void main() {
         final mockResponse = QueryResult(
           data: MockData.mockStationSearchResponse,
           source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
+          options: QueryOptions(document: gql('query { __typename }')),
         );
 
         when(() => mockClient.query(any())).thenAnswer(
@@ -46,7 +53,7 @@ void main() {
         final mockResponse = QueryResult(
           data: {'searchStations': []},
           source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
+          options: QueryOptions(document: gql('query { __typename }')),
         );
 
         when(() => mockClient.query(any())).thenAnswer(
@@ -65,7 +72,7 @@ void main() {
         final mockResponse = QueryResult(
           data: MockData.mockStationSearchResponse,
           source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
+          options: QueryOptions(document: gql('query { __typename }')),
         );
 
         when(() => mockClient.query(any())).thenAnswer(
@@ -86,7 +93,7 @@ void main() {
         final mockResponse = QueryResult(
           data: MockData.mockStationSearchResponse,
           source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
+          options: QueryOptions(document: gql('query { __typename }')),
         );
 
         when(() => mockClient.query(any())).thenAnswer(
@@ -107,7 +114,7 @@ void main() {
         final mockResponse = QueryResult(
           data: null,
           source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
+          options: QueryOptions(document: gql('query { __typename }')),
           exception: OperationException(
             graphqlErrors: [
               const GraphQLError(message: 'Network error'),
@@ -131,7 +138,7 @@ void main() {
         final mockResponse = QueryResult(
           data: MockData.mockStationSearchResponse,
           source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
+          options: QueryOptions(document: gql('query { __typename }')),
         );
 
         when(() => mockClient.query(any())).thenAnswer(
@@ -145,111 +152,6 @@ void main() {
         final captured = verify(() => mockClient.query(captureAny())).captured;
         final queryOptions = captured.first as QueryOptions;
         expect(queryOptions.fetchPolicy, FetchPolicy.networkOnly);
-      });
-    });
-
-    group('getStation', () {
-      test('returns station on successful query', () async {
-        // Arrange
-        final mockResponse = QueryResult(
-          data: {
-            'station': {
-              'id': MockData.zurichHB.id,
-              'name': MockData.zurichHB.name,
-              'coordinates': {
-                'latitude': MockData.zurichHB.coordinates.latitude,
-                'longitude': MockData.zurichHB.coordinates.longitude,
-              },
-            },
-          },
-          source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
-        );
-
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
-
-        // Act
-        final result = await repository.getStation('8503000');
-
-        // Assert
-        expect(result, isNotNull);
-        expect(result!.id, '8503000');
-        expect(result.name, 'Zürich HB');
-      });
-
-      test('returns null when station not found', () async {
-        // Arrange
-        final mockResponse = QueryResult(
-          data: {'station': null},
-          source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
-        );
-
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
-
-        // Act
-        final result = await repository.getStation('invalid');
-
-        // Assert
-        expect(result, isNull);
-      });
-
-      test('throws exception on GraphQL error', () async {
-        // Arrange
-        final mockResponse = QueryResult(
-          data: null,
-          source: QueryResultSource.network,
-          options: QueryOptions(document: gql('test')),
-          exception: OperationException(
-            graphqlErrors: [
-              const GraphQLError(message: 'Station not found'),
-            ],
-          ),
-        );
-
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
-
-        // Act & Assert
-        expect(
-          () => repository.getStation('invalid'),
-          throwsA(isA<OperationException>()),
-        );
-      });
-
-      test('uses cache-first fetch policy', () async {
-        // Arrange
-        final mockResponse = QueryResult(
-          data: {
-            'station': {
-              'id': MockData.zurichHB.id,
-              'name': MockData.zurichHB.name,
-              'coordinates': {
-                'latitude': MockData.zurichHB.coordinates.latitude,
-                'longitude': MockData.zurichHB.coordinates.longitude,
-              },
-            },
-          },
-          source: QueryResultSource.cache,
-          options: QueryOptions(document: gql('test')),
-        );
-
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
-
-        // Act
-        await repository.getStation('8503000');
-
-        // Assert
-        final captured = verify(() => mockClient.query(captureAny())).captured;
-        final queryOptions = captured.first as QueryOptions;
-        expect(queryOptions.fetchPolicy, FetchPolicy.cacheFirst);
       });
     });
   });

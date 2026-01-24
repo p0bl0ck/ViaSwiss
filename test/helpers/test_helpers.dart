@@ -5,10 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Helper to wrap a widget with providers for testing
 Widget wrapWithProviders(
   Widget child, {
-  List<Override>? overrides,
+  List<dynamic>? overrides,
 }) {
   return ProviderScope(
-    overrides: overrides ?? [],
+    overrides: overrides?.cast() ?? [],
     child: MaterialApp(
       home: Scaffold(body: child),
     ),
@@ -26,7 +26,7 @@ Widget wrapWithMaterialApp(Widget child) {
 Future<void> pumpWithProviders(
   WidgetTester tester,
   Widget child, {
-  List<Override>? overrides,
+  List<dynamic>? overrides,
 }) async {
   await tester.pumpWidget(
     wrapWithProviders(child, overrides: overrides),
