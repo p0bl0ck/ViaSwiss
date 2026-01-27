@@ -11,11 +11,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          const AppCard(
-            child: Text(testText),
-          ),
-        ),
+        wrapWithMaterialApp(const AppCard(child: Text(testText))),
       );
 
       // Assert
@@ -29,10 +25,7 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          AppCard(
-            onTap: () => tapped = true,
-            child: const Text('Tap me'),
-          ),
+          AppCard(onTap: () => tapped = true, child: const Text('Tap me')),
         ),
       );
 
@@ -46,11 +39,7 @@ void main() {
     testWidgets('does not respond to tap when onTap is null', (tester) async {
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          const AppCard(
-            child: Text('No tap'),
-          ),
-        ),
+        wrapWithMaterialApp(const AppCard(child: Text('No tap'))),
       );
 
       // Assert - should not throw
@@ -64,19 +53,18 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          const AppCard(
-            padding: customPadding,
-            child: Text('Custom padding'),
-          ),
+          const AppCard(padding: customPadding, child: Text('Custom padding')),
         ),
       );
 
       // Assert - find the Padding widget inside InkWell
       final padding = tester.widget<Padding>(
-        find.descendant(
-          of: find.byType(InkWell),
-          matching: find.byType(Padding),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(InkWell),
+              matching: find.byType(Padding),
+            )
+            .first,
       );
       expect(padding.padding, customPadding);
     });
@@ -88,10 +76,7 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          const AppCard(
-            margin: customMargin,
-            child: Text('Custom margin'),
-          ),
+          const AppCard(margin: customMargin, child: Text('Custom margin')),
         ),
       );
 
@@ -103,34 +88,31 @@ void main() {
     testWidgets('has default margin when not specified', (tester) async {
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          const AppCard(
-            child: Text('Default margin'),
-          ),
-        ),
+        wrapWithMaterialApp(const AppCard(child: Text('Default margin'))),
       );
 
       // Assert
       final card = tester.widget<Card>(find.byType(Card));
-      expect(card.margin, const EdgeInsets.symmetric(horizontal: 16, vertical: 8));
+      expect(
+        card.margin,
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      );
     });
 
     testWidgets('has default padding when not specified', (tester) async {
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          const AppCard(
-            child: Text('Default padding'),
-          ),
-        ),
+        wrapWithMaterialApp(const AppCard(child: Text('Default padding'))),
       );
 
       // Assert - find the Padding widget inside InkWell
       final padding = tester.widget<Padding>(
-        find.descendant(
-          of: find.byType(InkWell),
-          matching: find.byType(Padding),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(InkWell),
+              matching: find.byType(Padding),
+            )
+            .first,
       );
       expect(padding.padding, const EdgeInsets.all(16));
     });
@@ -139,10 +121,7 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          AppCard(
-            onTap: () {},
-            child: const Text('Rounded'),
-          ),
+          AppCard(onTap: () {}, child: const Text('Rounded')),
         ),
       );
 
@@ -155,10 +134,7 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          AppCard(
-            onTap: () {},
-            child: const Text('Inkwell'),
-          ),
+          AppCard(onTap: () {}, child: const Text('Inkwell')),
         ),
       );
 
@@ -170,10 +146,7 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          AppCard(
-            onTap: () {},
-            child: const Text('Border radius'),
-          ),
+          AppCard(onTap: () {}, child: const Text('Border radius')),
         ),
       );
 

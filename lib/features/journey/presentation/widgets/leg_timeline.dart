@@ -7,10 +7,7 @@ import '../../domain/models/transport.dart';
 class LegTimeline extends StatelessWidget {
   final Leg leg;
 
-  const LegTimeline({
-    super.key,
-    required this.leg,
-  });
+  const LegTimeline({super.key, required this.leg});
 
   Color _getTransportColor(TransportType type) {
     switch (type) {
@@ -58,11 +55,7 @@ class LegTimeline extends StatelessWidget {
                 ),
               ),
               // Line
-              Container(
-                width: 4,
-                height: 80,
-                color: transportColor,
-              ),
+              Container(width: 4, height: 80, color: transportColor),
               // Arrival dot
               Container(
                 width: 12,
@@ -145,11 +138,7 @@ class LegTimeline extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.train,
-                        color: transportColor,
-                        size: 20,
-                      ),
+                      Icon(Icons.train, color: transportColor, size: 20),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Column(
@@ -183,9 +172,7 @@ class LegTimeline extends StatelessWidget {
                 // Arrival
                 Text(
                   DateFormatter.formatDateTime(leg.arrival),
-                  style: AppTheme.titleLarge.copyWith(
-                    color: transportColor,
-                  ),
+                  style: AppTheme.titleLarge.copyWith(color: transportColor),
                 ),
                 const SizedBox(height: 4),
                 Text(

@@ -4,10 +4,7 @@ import '../../../journey/domain/models/journey.dart';
 class RouteMap extends StatelessWidget {
   final Journey journey;
 
-  const RouteMap({
-    super.key,
-    required this.journey,
-  });
+  const RouteMap({super.key, required this.journey});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +18,7 @@ class RouteMap extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.map,
-              size: 64,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.map, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text(
               'Map View',
@@ -73,10 +66,7 @@ class RouteMap extends StatelessWidget {
         children: [
           const Text(
             'Route Stations',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           ...journey.legs.map((leg) {
@@ -94,10 +84,7 @@ class RouteMap extends StatelessWidget {
                   ),
                   Text(
                     '${leg.from.coordinates.latitude.toStringAsFixed(4)}, ${leg.from.coordinates.longitude.toStringAsFixed(4)}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
               ),
@@ -117,10 +104,7 @@ class RouteMap extends StatelessWidget {
                 ),
                 Text(
                   '${journey.to.coordinates.latitude.toStringAsFixed(4)}, ${journey.to.coordinates.longitude.toStringAsFixed(4)}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),

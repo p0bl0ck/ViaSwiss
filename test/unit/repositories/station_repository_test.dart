@@ -34,9 +34,9 @@ void main() {
           options: QueryOptions(document: gql('query { __typename }')),
         );
 
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => mockResponse);
 
         // Act
         final result = await repository.searchStations('Zürich');
@@ -56,9 +56,9 @@ void main() {
           options: QueryOptions(document: gql('query { __typename }')),
         );
 
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => mockResponse);
 
         // Act
         final result = await repository.searchStations('NonExistent');
@@ -75,9 +75,9 @@ void main() {
           options: QueryOptions(document: gql('query { __typename }')),
         );
 
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => mockResponse);
 
         // Act
         await repository.searchStations('Zürich', limit: 5);
@@ -96,9 +96,9 @@ void main() {
           options: QueryOptions(document: gql('query { __typename }')),
         );
 
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => mockResponse);
 
         // Act
         await repository.searchStations('Zürich');
@@ -116,15 +116,13 @@ void main() {
           source: QueryResultSource.network,
           options: QueryOptions(document: gql('query { __typename }')),
           exception: OperationException(
-            graphqlErrors: [
-              const GraphQLError(message: 'Network error'),
-            ],
+            graphqlErrors: [const GraphQLError(message: 'Network error')],
           ),
         );
 
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => mockResponse);
 
         // Act & Assert
         expect(
@@ -141,9 +139,9 @@ void main() {
           options: QueryOptions(document: gql('query { __typename }')),
         );
 
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => mockResponse,
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => mockResponse);
 
         // Act
         await repository.searchStations('Zürich');

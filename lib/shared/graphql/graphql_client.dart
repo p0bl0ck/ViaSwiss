@@ -76,28 +76,17 @@ class GraphQLService {
   static GraphQLClient getClient() {
     if (_client != null) return _client!;
 
-    final HttpLink httpLink = HttpLink(
-      AppConfig.graphqlEndpoint,
-    );
+    final HttpLink httpLink = HttpLink(AppConfig.graphqlEndpoint);
 
     // Chain logging link with HTTP link
-    final Link link = Link.from([
-      LoggingLink(),
-      httpLink,
-    ]);
+    final Link link = Link.from([LoggingLink(), httpLink]);
 
     _client = GraphQLClient(
       link: link,
-      cache: GraphQLCache(
-        store: InMemoryStore(),
-      ),
+      cache: GraphQLCache(store: InMemoryStore()),
       defaultPolicies: DefaultPolicies(
-        query: Policies(
-          fetch: FetchPolicy.cacheFirst,
-        ),
-        mutate: Policies(
-          fetch: FetchPolicy.networkOnly,
-        ),
+        query: Policies(fetch: FetchPolicy.cacheFirst),
+        mutate: Policies(fetch: FetchPolicy.networkOnly),
       ),
     );
 

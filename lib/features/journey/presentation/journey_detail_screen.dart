@@ -11,10 +11,7 @@ import 'widgets/leg_timeline.dart';
 class JourneyDetailScreen extends StatelessWidget {
   final RouteRecommendation recommendation;
 
-  const JourneyDetailScreen({
-    super.key,
-    required this.recommendation,
-  });
+  const JourneyDetailScreen({super.key, required this.recommendation});
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +64,7 @@ class JourneyDetailScreen extends StatelessWidget {
                       children: [
                         const Text(
                           'Departure',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -95,10 +89,7 @@ class JourneyDetailScreen extends StatelessWidget {
                       children: [
                         const Text(
                           'Arrival',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -168,10 +159,7 @@ class JourneyDetailScreen extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Journey Legs
-                const Text(
-                  'Journey Legs',
-                  style: AppTheme.titleLarge,
-                ),
+                const Text('Journey Legs', style: AppTheme.titleLarge),
                 const SizedBox(height: 16),
                 ...journey.legs.map((leg) => LegTimeline(leg: leg)),
               ],
@@ -211,9 +199,7 @@ class JourneyDetailScreen extends StatelessWidget {
                 ),
                 Text(
                   _getConditionLabel(weather.condition),
-                  style: AppTheme.bodyMedium.copyWith(
-                    color: Colors.blue[700],
-                  ),
+                  style: AppTheme.bodyMedium.copyWith(color: Colors.blue[700]),
                 ),
               ],
             ),
@@ -276,9 +262,7 @@ class JourneyDetailScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   warning,
-                  style: AppTheme.bodyMedium.copyWith(
-                    color: Colors.amber[900],
-                  ),
+                  style: AppTheme.bodyMedium.copyWith(color: Colors.amber[900]),
                 ),
               ),
             ],
@@ -299,18 +283,12 @@ class JourneyDetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.lightbulb_outline,
-            color: Colors.green[700],
-            size: 24,
-          ),
+          Icon(Icons.lightbulb_outline, color: Colors.green[700], size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               recommendationText,
-              style: AppTheme.bodyMedium.copyWith(
-                color: Colors.green[900],
-              ),
+              style: AppTheme.bodyMedium.copyWith(color: Colors.green[900]),
             ),
           ),
         ],

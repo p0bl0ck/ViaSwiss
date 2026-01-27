@@ -137,11 +137,7 @@ void main() {
       ];
 
       for (final type in types) {
-        final transport = Transport(
-          type: type,
-          number: '1',
-          operator: 'Test',
-        );
+        final transport = Transport(type: type, number: '1', operator: 'Test');
 
         expect(transport.type, type);
       }

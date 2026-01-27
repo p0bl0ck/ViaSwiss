@@ -11,10 +11,7 @@ class PopularRoutesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Popular Routes',
-          style: AppTheme.titleLarge,
-        ),
+        const Text('Popular Routes', style: AppTheme.titleLarge),
         const SizedBox(height: 16),
         ...AppConstants.popularRoutes.map((route) {
           return AppCard(
@@ -31,11 +28,7 @@ class PopularRoutesSection extends StatelessWidget {
             },
             child: Row(
               children: [
-                const Icon(
-                  Icons.train,
-                  color: AppTheme.primaryColor,
-                  size: 32,
-                ),
+                const Icon(Icons.train, color: AppTheme.primaryColor, size: 32),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(

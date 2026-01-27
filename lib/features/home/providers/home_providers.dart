@@ -5,19 +5,10 @@ class SelectedStations {
   final Station? from;
   final Station? to;
 
-  const SelectedStations({
-    required this.from,
-    required this.to,
-  });
+  const SelectedStations({required this.from, required this.to});
 
-  SelectedStations copyWith({
-    Station? from,
-    Station? to,
-  }) {
-    return SelectedStations(
-      from: from ?? this.from,
-      to: to ?? this.to,
-    );
+  SelectedStations copyWith({Station? from, Station? to}) {
+    return SelectedStations(from: from ?? this.from, to: to ?? this.to);
   }
 }
 
@@ -47,7 +38,8 @@ class SelectedStationsNotifier extends Notifier<SelectedStations> {
 
 final selectedStationsProvider =
     NotifierProvider<SelectedStationsNotifier, SelectedStations>(
-        SelectedStationsNotifier.new);
+      SelectedStationsNotifier.new,
+    );
 
 // Departure time provider using Notifier pattern
 class DepartureTimeNotifier extends Notifier<DateTime?> {
@@ -60,4 +52,6 @@ class DepartureTimeNotifier extends Notifier<DateTime?> {
 }
 
 final departureTimeProvider =
-    NotifierProvider<DepartureTimeNotifier, DateTime?>(DepartureTimeNotifier.new);
+    NotifierProvider<DepartureTimeNotifier, DateTime?>(
+      DepartureTimeNotifier.new,
+    );

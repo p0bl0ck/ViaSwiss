@@ -34,10 +34,10 @@ class FeatureFlags {
 
   /// Map of all feature flags for runtime inspection/updates.
   static Map<String, bool> get all => {
-        'popularRoutes': popularRoutes,
-        'weatherInfo': weatherInfo,
-        'mapView': mapView,
-      };
+    'popularRoutes': popularRoutes,
+    'weatherInfo': weatherInfo,
+    'mapView': mapView,
+  };
 
   /// Check if a feature is enabled by name.
   static bool isEnabled(String featureName) {

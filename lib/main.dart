@@ -9,9 +9,5 @@ void main() async {
   // Initialize GraphQL cache store
   await initHiveForFlutter();
 
-  runApp(
-    const ProviderScope(
-      child: ViaSwissApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: ViaSwissApp()));
 }

@@ -5,11 +5,7 @@ class AppErrorWidget extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
 
-  const AppErrorWidget({
-    super.key,
-    required this.message,
-    this.onRetry,
-  });
+  const AppErrorWidget({super.key, required this.message, this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +28,7 @@ class AppErrorWidget extends StatelessWidget {
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: onRetry,
-                child: const Text('Retry'),
-              ),
+              ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
             ],
           ],
         ),

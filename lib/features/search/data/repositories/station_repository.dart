@@ -13,10 +13,7 @@ class StationRepository {
     final result = await _client.query(
       QueryOptions(
         document: gql(searchStationsQuery),
-        variables: {
-          'query': query,
-          'limit': limit,
-        },
+        variables: {'query': query, 'limit': limit},
         fetchPolicy: FetchPolicy.networkOnly,
       ),
     );

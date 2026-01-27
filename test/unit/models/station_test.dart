@@ -27,10 +27,7 @@ void main() {
       final json = {
         'id': '8507000',
         'name': 'Bern',
-        'coordinates': {
-          'latitude': 46.9480,
-          'longitude': 7.4395,
-        },
+        'coordinates': {'latitude': 46.9480, 'longitude': 7.4395},
       };
 
       final station = Station.fromJson(json);
@@ -49,7 +46,10 @@ void main() {
       expect(deserialized.id, original.id);
       expect(deserialized.name, original.name);
       expect(deserialized.coordinates.latitude, original.coordinates.latitude);
-      expect(deserialized.coordinates.longitude, original.coordinates.longitude);
+      expect(
+        deserialized.coordinates.longitude,
+        original.coordinates.longitude,
+      );
     });
 
     test('equality works correctly', () {

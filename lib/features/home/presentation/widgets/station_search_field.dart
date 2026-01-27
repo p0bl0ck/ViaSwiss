@@ -39,10 +39,7 @@ class StationSearchField extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   Text(
                     station?.name ??

@@ -8,11 +8,7 @@ class JourneyCard extends StatelessWidget {
   final Journey journey;
   final VoidCallback onTap;
 
-  const JourneyCard({
-    super.key,
-    required this.journey,
-    required this.onTap,
-  });
+  const JourneyCard({super.key, required this.journey, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +42,7 @@ class JourneyCard extends StatelessWidget {
               const SizedBox(width: 16),
               Column(
                 children: [
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.grey,
-                  ),
+                  const Icon(Icons.arrow_forward, color: Colors.grey),
                   const SizedBox(height: 4),
                   Text(
                     DateFormatter.formatDuration(journey.duration),
@@ -119,11 +112,7 @@ class JourneyCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 16,
-            color: color ?? AppTheme.primaryColor,
-          ),
+          Icon(icon, size: 16, color: color ?? AppTheme.primaryColor),
           const SizedBox(width: 4),
           Text(
             label,

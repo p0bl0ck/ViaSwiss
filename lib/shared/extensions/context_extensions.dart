@@ -14,9 +14,8 @@ extension ContextExtensions on BuildContext {
   // Navigation shortcuts
   void pop<T>([T? result]) => Navigator.of(this).pop(result);
 
-  Future<T?> push<T>(Widget screen) => Navigator.of(this).push<T>(
-        MaterialPageRoute(builder: (_) => screen),
-      );
+  Future<T?> push<T>(Widget screen) =>
+      Navigator.of(this).push<T>(MaterialPageRoute(builder: (_) => screen));
 
   // Snackbar helper
   void showSnackBar(String message, {bool isError = false}) {

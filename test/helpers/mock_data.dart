@@ -31,12 +31,7 @@ class MockData {
     coordinates: Coordinates(latitude: 46.6863, longitude: 7.8632),
   );
 
-  static List<Station> get mockStations => [
-        zurichHB,
-        bern,
-        geneva,
-        interlaken,
-      ];
+  static List<Station> get mockStations => [zurichHB, bern, geneva, interlaken];
 
   // Mock Transport
   static final icTransport = const Transport(
@@ -97,37 +92,39 @@ class MockData {
       arrival: arrivalTime,
       duration: duration ?? 150,
       transfers: transfers ?? 0,
-      legs: legs ?? [
-        createMockLeg(
-          from: from ?? zurichHB,
-          to: to ?? bern,
-          departure: departureTime,
-          arrival: arrivalTime,
-          platform: '4',
-        ),
-      ],
+      legs:
+          legs ??
+          [
+            createMockLeg(
+              from: from ?? zurichHB,
+              to: to ?? bern,
+              departure: departureTime,
+              arrival: arrivalTime,
+              platform: '4',
+            ),
+          ],
       scenicScore: scenicScore,
     );
   }
 
   static List<Journey> get mockJourneys => [
-        createMockJourney(
-          id: 'journey-1',
-          from: zurichHB,
-          to: bern,
-          duration: 150,
-          transfers: 0,
-          scenicScore: 0.75,
-        ),
-        createMockJourney(
-          id: 'journey-2',
-          from: zurichHB,
-          to: bern,
-          duration: 180,
-          transfers: 1,
-          scenicScore: 0.85,
-        ),
-      ];
+    createMockJourney(
+      id: 'journey-1',
+      from: zurichHB,
+      to: bern,
+      duration: 150,
+      transfers: 0,
+      scenicScore: 0.75,
+    ),
+    createMockJourney(
+      id: 'journey-2',
+      from: zurichHB,
+      to: bern,
+      duration: 180,
+      transfers: 1,
+      scenicScore: 0.85,
+    ),
+  ];
 
   // Mock Weather
   static Weather createMockWeather({
@@ -140,7 +137,8 @@ class MockData {
     List<WeatherForecast>? forecast,
   }) {
     return Weather(
-      location: location ?? const Coordinates(latitude: 47.3782, longitude: 8.5402),
+      location:
+          location ?? const Coordinates(latitude: 47.3782, longitude: 8.5402),
       temperature: temperature ?? 15.5,
       condition: condition ?? WeatherCondition.clear,
       precipitationProbability: precipitationProbability ?? 10,
@@ -151,96 +149,100 @@ class MockData {
   }
 
   static List<WeatherForecast> get mockWeatherForecast => [
-        WeatherForecast(
-          timestamp: DateTime.now().add(const Duration(hours: 1)),
-          temperature: 16.0,
-          condition: WeatherCondition.clear,
-          precipitationProbability: 5,
-        ),
-        WeatherForecast(
-          timestamp: DateTime.now().add(const Duration(hours: 2)),
-          temperature: 17.0,
-          condition: WeatherCondition.partlyCloudy,
-          precipitationProbability: 15,
-        ),
-      ];
+    WeatherForecast(
+      timestamp: DateTime.now().add(const Duration(hours: 1)),
+      temperature: 16.0,
+      condition: WeatherCondition.clear,
+      precipitationProbability: 5,
+    ),
+    WeatherForecast(
+      timestamp: DateTime.now().add(const Duration(hours: 2)),
+      temperature: 17.0,
+      condition: WeatherCondition.partlyCloudy,
+      precipitationProbability: 15,
+    ),
+  ];
 
   // Mock GraphQL Responses
   static Map<String, dynamic> get mockStationSearchResponse => {
-        'searchStations': [
-          {
-            'id': zurichHB.id,
-            'name': zurichHB.name,
-            'coordinates': {
-              'latitude': zurichHB.coordinates.latitude,
-              'longitude': zurichHB.coordinates.longitude,
-            },
-          },
-          {
-            'id': bern.id,
-            'name': bern.name,
-            'coordinates': {
-              'latitude': bern.coordinates.latitude,
-              'longitude': bern.coordinates.longitude,
-            },
-          },
-        ],
-      };
+    'searchStations': [
+      {
+        'id': zurichHB.id,
+        'name': zurichHB.name,
+        'coordinates': {
+          'latitude': zurichHB.coordinates.latitude,
+          'longitude': zurichHB.coordinates.longitude,
+        },
+      },
+      {
+        'id': bern.id,
+        'name': bern.name,
+        'coordinates': {
+          'latitude': bern.coordinates.latitude,
+          'longitude': bern.coordinates.longitude,
+        },
+      },
+    ],
+  };
 
   static Map<String, dynamic> mockJourneyResponse(Journey journey) => {
-        'journeys': [
-          {
-            'id': journey.id,
-            'from': {
-              'id': journey.from.id,
-              'name': journey.from.name,
-              'coordinates': {
-                'latitude': journey.from.coordinates.latitude,
-                'longitude': journey.from.coordinates.longitude,
-              },
-            },
-            'to': {
-              'id': journey.to.id,
-              'name': journey.to.name,
-              'coordinates': {
-                'latitude': journey.to.coordinates.latitude,
-                'longitude': journey.to.coordinates.longitude,
-              },
-            },
-            'departure': journey.departure.toIso8601String(),
-            'arrival': journey.arrival.toIso8601String(),
-            'duration': journey.duration,
-            'transfers': journey.transfers,
-            'scenicScore': journey.scenicScore,
-            'legs': journey.legs.map((leg) => {
-              'from': {
-                'id': leg.from.id,
-                'name': leg.from.name,
-                'coordinates': {
-                  'latitude': leg.from.coordinates.latitude,
-                  'longitude': leg.from.coordinates.longitude,
-                },
-              },
-              'to': {
-                'id': leg.to.id,
-                'name': leg.to.name,
-                'coordinates': {
-                  'latitude': leg.to.coordinates.latitude,
-                  'longitude': leg.to.coordinates.longitude,
-                },
-              },
-              'departure': leg.departure.toIso8601String(),
-              'arrival': leg.arrival.toIso8601String(),
-              'platform': leg.platform,
-              'transport': {
-                'type': leg.transport.type.name.toUpperCase(),
-                'number': leg.transport.number,
-                'operator': leg.transport.operator,
-                'line': leg.transport.line,
-              },
-              'delay': leg.delay,
-            }).toList(),
+    'journeys': [
+      {
+        'id': journey.id,
+        'from': {
+          'id': journey.from.id,
+          'name': journey.from.name,
+          'coordinates': {
+            'latitude': journey.from.coordinates.latitude,
+            'longitude': journey.from.coordinates.longitude,
           },
-        ],
-      };
+        },
+        'to': {
+          'id': journey.to.id,
+          'name': journey.to.name,
+          'coordinates': {
+            'latitude': journey.to.coordinates.latitude,
+            'longitude': journey.to.coordinates.longitude,
+          },
+        },
+        'departure': journey.departure.toIso8601String(),
+        'arrival': journey.arrival.toIso8601String(),
+        'duration': journey.duration,
+        'transfers': journey.transfers,
+        'scenicScore': journey.scenicScore,
+        'legs': journey.legs
+            .map(
+              (leg) => {
+                'from': {
+                  'id': leg.from.id,
+                  'name': leg.from.name,
+                  'coordinates': {
+                    'latitude': leg.from.coordinates.latitude,
+                    'longitude': leg.from.coordinates.longitude,
+                  },
+                },
+                'to': {
+                  'id': leg.to.id,
+                  'name': leg.to.name,
+                  'coordinates': {
+                    'latitude': leg.to.coordinates.latitude,
+                    'longitude': leg.to.coordinates.longitude,
+                  },
+                },
+                'departure': leg.departure.toIso8601String(),
+                'arrival': leg.arrival.toIso8601String(),
+                'platform': leg.platform,
+                'transport': {
+                  'type': leg.transport.type.name.toUpperCase(),
+                  'number': leg.transport.number,
+                  'operator': leg.transport.operator,
+                  'line': leg.transport.line,
+                },
+                'delay': leg.delay,
+              },
+            )
+            .toList(),
+      },
+    ],
+  };
 }

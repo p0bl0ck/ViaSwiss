@@ -13,10 +13,7 @@ import 'widgets/station_list_item.dart';
 class StationSearchScreen extends ConsumerStatefulWidget {
   final bool isFromStation;
 
-  const StationSearchScreen({
-    super.key,
-    required this.isFromStation,
-  });
+  const StationSearchScreen({super.key, required this.isFromStation});
 
   @override
   ConsumerState<StationSearchScreen> createState() =>
@@ -137,9 +134,8 @@ class _StationSearchScreenState extends ConsumerState<StationSearchScreen> {
                   },
                 );
               },
-              loading: () => const LoadingIndicator(
-                message: 'Searching stations...',
-              ),
+              loading: () =>
+                  const LoadingIndicator(message: 'Searching stations...'),
               error: (error, stack) => AppErrorWidget(
                 message: error.toString(),
                 onRetry: () {

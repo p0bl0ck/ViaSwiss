@@ -24,9 +24,7 @@ class HomeScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ViaSwiss'),
-      ),
+      appBar: AppBar(title: const Text('ViaSwiss')),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -35,10 +33,7 @@ class HomeScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Search section
-                const Text(
-                  'Where to?',
-                  style: AppTheme.titleLarge,
-                ),
+                const Text('Where to?', style: AppTheme.titleLarge),
                 const SizedBox(height: 16),
 
                 // From station
@@ -54,7 +49,9 @@ class HomeScreen extends ConsumerWidget {
                   child: IconButton(
                     icon: const Icon(Icons.swap_vert),
                     onPressed: () {
-                      ref.read(selectedStationsProvider.notifier).swapStations();
+                      ref
+                          .read(selectedStationsProvider.notifier)
+                          .swapStations();
                     },
                   ),
                 ),
@@ -82,7 +79,9 @@ class HomeScreen extends ConsumerWidget {
                     if (selectedDate != null && context.mounted) {
                       final selectedTime = await showTimePicker(
                         context: context,
-                        initialTime: TimeOfDay.fromDateTime(departureTime ?? now),
+                        initialTime: TimeOfDay.fromDateTime(
+                          departureTime ?? now,
+                        ),
                       );
 
                       if (selectedTime != null) {
@@ -108,7 +107,10 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.access_time, color: AppTheme.primaryColor),
+                        const Icon(
+                          Icons.access_time,
+                          color: AppTheme.primaryColor,
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -140,7 +142,8 @@ class HomeScreen extends ConsumerWidget {
                 AppButton(
                   text: 'Search Journeys',
                   icon: Icons.search,
-                  onPressed: selectedStations.from != null &&
+                  onPressed:
+                      selectedStations.from != null &&
                           selectedStations.to != null
                       ? () {
                           context.push(

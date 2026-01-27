@@ -19,11 +19,7 @@ class StationListItem extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          const Icon(
-            Icons.location_on,
-            color: AppTheme.primaryColor,
-            size: 32,
-          ),
+          const Icon(Icons.location_on, color: AppTheme.primaryColor, size: 32),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -43,11 +39,7 @@ class StationListItem extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         ],
       ),
     );

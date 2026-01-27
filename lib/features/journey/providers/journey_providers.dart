@@ -29,31 +29,31 @@ class JourneySearchParams {
 
   @override
   int get hashCode =>
-      fromId.hashCode ^
-      toId.hashCode ^
-      departureTime.hashCode ^
-      limit.hashCode;
+      fromId.hashCode ^ toId.hashCode ^ departureTime.hashCode ^ limit.hashCode;
 }
 
 // Journeys provider
 final journeysProvider = FutureProvider.autoDispose
     .family<List<Journey>, JourneySearchParams>((ref, params) async {
-  final repository = ref.watch(journeyRepositoryProvider);
-  return repository.getJourneys(
-    from: params.fromId,
-    to: params.toId,
-    departureTime: params.departureTime,
-    limit: params.limit,
-  );
-});
+      final repository = ref.watch(journeyRepositoryProvider);
+      return repository.getJourneys(
+        from: params.fromId,
+        to: params.toId,
+        departureTime: params.departureTime,
+        limit: params.limit,
+      );
+    });
 
 // Route recommendations provider
 final routeRecommendationsProvider = FutureProvider.autoDispose
-    .family<List<RouteRecommendation>, JourneySearchParams>((ref, params) async {
-  final repository = ref.watch(journeyRepositoryProvider);
-  return repository.getRouteRecommendations(
-    from: params.fromId,
-    to: params.toId,
-    departureTime: params.departureTime,
-  );
-});
+    .family<List<RouteRecommendation>, JourneySearchParams>((
+      ref,
+      params,
+    ) async {
+      final repository = ref.watch(journeyRepositoryProvider);
+      return repository.getRouteRecommendations(
+        from: params.fromId,
+        to: params.toId,
+        departureTime: params.departureTime,
+      );
+    });

@@ -17,12 +17,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -40,12 +35,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -59,12 +49,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -77,30 +62,22 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
       expect(find.text('1 transfer'), findsOneWidget);
     });
 
-    testWidgets('shows plural transfers for multiple transfers', (tester) async {
+    testWidgets('shows plural transfers for multiple transfers', (
+      tester,
+    ) async {
       // Arrange
       final journey = MockData.createMockJourney(transfers: 3);
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -113,12 +90,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -131,12 +103,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -151,10 +118,7 @@ void main() {
       // Act
       await tester.pumpWidget(
         wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () => tapped = true,
-          ),
+          JourneyCard(journey: journey, onTap: () => tapped = true),
         ),
       );
 
@@ -171,12 +135,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -195,12 +154,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -219,12 +173,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -243,12 +192,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert
@@ -261,12 +205,7 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        wrapWithMaterialApp(
-          JourneyCard(
-            journey: journey,
-            onTap: () {},
-          ),
-        ),
+        wrapWithMaterialApp(JourneyCard(journey: journey, onTap: () {})),
       );
 
       // Assert

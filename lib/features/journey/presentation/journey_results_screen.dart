@@ -49,9 +49,7 @@ class JourneyResultsScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Journey Results'),
-      ),
+      appBar: AppBar(title: const Text('Journey Results')),
       body: Column(
         children: [
           // Route info header
@@ -119,11 +117,7 @@ class JourneyResultsScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.train,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
+                        Icon(Icons.train, size: 64, color: Colors.grey[400]),
                         const SizedBox(height: 16),
                         Text(
                           AppConstants.noJourneysFound,
@@ -151,9 +145,8 @@ class JourneyResultsScreen extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const LoadingIndicator(
-                message: 'Searching for journeys...',
-              ),
+              loading: () =>
+                  const LoadingIndicator(message: 'Searching for journeys...'),
               error: (error, stack) => AppErrorWidget(
                 message: error.toString(),
                 onRetry: () {

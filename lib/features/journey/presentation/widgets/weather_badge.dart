@@ -5,10 +5,7 @@ import '../../../weather/domain/models/weather.dart';
 class WeatherBadge extends StatelessWidget {
   final Weather weather;
 
-  const WeatherBadge({
-    super.key,
-    required this.weather,
-  });
+  const WeatherBadge({super.key, required this.weather});
 
   IconData _getWeatherIcon(WeatherCondition condition) {
     switch (condition) {
@@ -62,26 +59,16 @@ class WeatherBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            _getWeatherIcon(weather.condition),
-            color: color,
-            size: 20,
-          ),
+          Icon(_getWeatherIcon(weather.condition), color: color, size: 20),
           const SizedBox(width: 8),
           Text(
             '${weather.temperature.toStringAsFixed(0)}°C',
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: color, fontWeight: FontWeight.w600),
           ),
           const SizedBox(width: 8),
           Text(
             '${weather.precipitationProbability}%',
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: color, fontSize: 12),
           ),
         ],
       ),

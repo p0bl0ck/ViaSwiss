@@ -8,26 +8,23 @@ import 'widgets/route_map.dart';
 class MapScreen extends StatelessWidget {
   final Journey journey;
 
-  const MapScreen({
-    super.key,
-    required this.journey,
-  });
+  const MapScreen({super.key, required this.journey});
 
   @override
   Widget build(BuildContext context) {
     AppLogger.screen('MapScreen', {
       'journey.id': journey.id,
       'journey.from': journey.from.name,
-      'journey.from.coordinates': '${journey.from.coordinates.latitude}, ${journey.from.coordinates.longitude}',
+      'journey.from.coordinates':
+          '${journey.from.coordinates.latitude}, ${journey.from.coordinates.longitude}',
       'journey.to': journey.to.name,
-      'journey.to.coordinates': '${journey.to.coordinates.latitude}, ${journey.to.coordinates.longitude}',
+      'journey.to.coordinates':
+          '${journey.to.coordinates.latitude}, ${journey.to.coordinates.longitude}',
       'journey.legs': journey.legs.length,
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Route Map'),
-      ),
+      appBar: AppBar(title: const Text('Route Map')),
       body: Column(
         children: [
           // Journey summary
@@ -91,17 +88,12 @@ class MapScreen extends StatelessWidget {
                         journey.departure,
                         journey.arrival,
                       ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       DateFormatter.formatDuration(journey.duration),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -110,9 +102,7 @@ class MapScreen extends StatelessWidget {
           ),
 
           // Map
-          Expanded(
-            child: RouteMap(journey: journey),
-          ),
+          Expanded(child: RouteMap(journey: journey)),
         ],
       ),
     );

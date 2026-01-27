@@ -14,11 +14,13 @@ class StationSearchQueryNotifier extends Notifier<String> {
 
 final stationSearchQueryProvider =
     NotifierProvider<StationSearchQueryNotifier, String>(
-        StationSearchQueryNotifier.new);
+      StationSearchQueryNotifier.new,
+    );
 
 // Station search results provider
-final stationSearchResultsProvider =
-    FutureProvider.autoDispose<List<Station>>((ref) async {
+final stationSearchResultsProvider = FutureProvider.autoDispose<List<Station>>((
+  ref,
+) async {
   final query = ref.watch(stationSearchQueryProvider);
 
   if (query.isEmpty || query.length < 2) {

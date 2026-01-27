@@ -36,7 +36,11 @@ class AppLogger {
   }
 
   /// Log navigation events
-  static void navigation(String from, String to, [Map<String, dynamic>? params]) {
+  static void navigation(
+    String from,
+    String to, [
+    Map<String, dynamic>? params,
+  ]) {
     final paramsStr = params != null ? ' with params: $params' : '';
     debugPrint('$_tag [Navigation] $from -> $to$paramsStr');
   }
@@ -63,7 +67,9 @@ class AppLogger {
     final durationMs = duration.inMilliseconds;
 
     if (errors != null && errors.isNotEmpty) {
-      debugPrint('$_tag [API Response] $operationName FAILED (${durationMs}ms)');
+      debugPrint(
+        '$_tag [API Response] $operationName FAILED (${durationMs}ms)',
+      );
       for (final error in errors) {
         debugPrint('$_tag [API Response] Error: ${error.message}');
       }
