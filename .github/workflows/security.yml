@@ -16,18 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: ./.github/actions/setup-flutter
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
+          run-codegen: 'false'
 
       - name: Check for known vulnerabilities
         run: |
@@ -44,18 +36,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: ./.github/actions/setup-flutter
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
+          run-codegen: 'false'
 
       - name: Check licenses
         run: |
@@ -73,18 +57,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: ./.github/actions/setup-flutter
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
+          run-codegen: 'false'
 
       - name: Run security analysis
         run: |

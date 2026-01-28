@@ -34,27 +34,10 @@ jobs:
       github.event.inputs.platforms == 'both'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: ./.github/actions/setup-flutter
         with:
-          flutter-version: '3.38.6'
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Run code generation
-        run: dart run build_runner build --delete-conflicting-outputs
+          java-version: '17'
 
       - name: Build Debug APK
         if: github.event.inputs.build_type == 'debug' || github.event.inputs.build_type == ''
@@ -101,21 +84,8 @@ jobs:
       github.event.inputs.platforms == 'both'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.38.6'
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Run code generation
-        run: dart run build_runner build --delete-conflicting-outputs
+        uses: ./.github/actions/setup-flutter
 
       - name: Build iOS (no codesign)
         run: |
