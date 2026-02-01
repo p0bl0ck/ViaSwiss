@@ -34,6 +34,9 @@ jobs:
       github.event.inputs.platforms == 'both'
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Flutter
         uses: ./.github/actions/setup-flutter
         with:
@@ -84,6 +87,9 @@ jobs:
       github.event.inputs.platforms == 'both'
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Flutter
         uses: ./.github/actions/setup-flutter
 
