@@ -2,7 +2,6 @@
 
 [![CI](https://github.com/p0bl0ck/ViaSwiss/actions/workflows/ci.yml/badge.svg)](https://github.com/p0bl0ck/ViaSwiss/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/p0bl0ck/ViaSwiss/actions/workflows/security.yml/badge.svg)](https://github.com/p0bl0ck/ViaSwiss/actions/workflows/security.yml)
-[![Deploy Beta](https://github.com/p0bl0ck/ViaSwiss/actions/workflows/deploy-beta.yml/badge.svg)](https://github.com/p0bl0ck/ViaSwiss/actions/workflows/deploy-beta.yml)
 
 A modern Flutter mobile application that connects to the ViaSwiss GraphQL backend to help users plan scenic Swiss train journeys with real-time weather information.
 
