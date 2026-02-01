@@ -12,10 +12,9 @@ class AppConfig {
     defaultValue: 'development',
   );
 
-  static Environment get environment =>
-      _environmentString == 'production'
-          ? Environment.production
-          : Environment.development;
+  static Environment get environment => _environmentString == 'production'
+      ? Environment.production
+      : Environment.development;
 
   // Production URL - must be provided via dart-define for production builds
   // Example: --dart-define=GRAPHQL_ENDPOINT=https://api.viaswiss.ch/graphql
@@ -26,8 +25,7 @@ class AppConfig {
 
   // Development endpoints
   static const String _localhostEndpoint = 'http://localhost:4000/graphql';
-  static const String _androidEmulatorEndpoint =
-      'http://10.0.2.2:4000/graphql';
+  static const String _androidEmulatorEndpoint = 'http://10.0.2.2:4000/graphql';
 
   // GraphQL API Endpoint - auto-selects based on environment and platform
   static String get graphqlEndpoint {
