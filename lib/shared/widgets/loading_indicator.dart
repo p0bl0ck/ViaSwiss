@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../core/config/theme.dart';
 
+import 'adaptive/adaptive_loading_indicator.dart';
+
+/// Loading indicator that adapts to the platform.
+/// - iOS/macOS: CupertinoActivityIndicator
+/// - Android/Web/other: Material CircularProgressIndicator
 class LoadingIndicator extends StatelessWidget {
   final String? message;
 
@@ -8,21 +12,6 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(color: AppTheme.primaryColor),
-          if (message != null) ...[
-            const SizedBox(height: 16),
-            Text(
-              message!,
-              style: AppTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ],
-      ),
-    );
+    return AdaptiveLoadingIndicator(message: message);
   }
 }
