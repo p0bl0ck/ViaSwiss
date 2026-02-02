@@ -14,8 +14,7 @@ class AdaptiveLoadingIndicator extends StatelessWidget {
 
   const AdaptiveLoadingIndicator({super.key, this.message});
 
-  bool get _useCupertino =>
-      !kIsWeb && (Platform.isIOS || Platform.isMacOS);
+  bool get _useCupertino => !kIsWeb && (Platform.isIOS || Platform.isMacOS);
 
   @override
   Widget build(BuildContext context) {
