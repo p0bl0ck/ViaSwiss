@@ -16,13 +16,13 @@ The goal is to provide native-feeling UI on each platform:
 lib/shared/widgets/
 ├── adaptive/
 │   ├── adaptive_loading_indicator.dart  ✅ DONE
+│   ├── adaptive_error_widget.dart       ✅ DONE
 │   ├── adaptive_button.dart             🔲 TODO
-│   ├── adaptive_card.dart               🔲 TODO
-│   └── adaptive_error_widget.dart       🔲 TODO
+│   └── adaptive_card.dart               🔲 TODO
 ├── loading_indicator.dart               ✅ Updated (delegates to adaptive)
+├── error_widget.dart                    ✅ Updated (delegates to adaptive)
 ├── app_button.dart                      🔲 TODO
-├── app_card.dart                        🔲 TODO
-└── error_widget.dart                    🔲 TODO
+└── app_card.dart                        🔲 TODO
 ```
 
 ### Platform Detection Pattern
@@ -48,6 +48,19 @@ bool get _useCupertino => !kIsWeb && (Platform.isIOS || Platform.isMacOS);
 | Android/Web | `CircularProgressIndicator(color: AppTheme.primaryColor)` |
 
 **Migration approach**: The original `LoadingIndicator` now delegates to `AdaptiveLoadingIndicator`, providing backward compatibility.
+
+---
+
+### 2. AppErrorWidget ✅
+
+**File**: `lib/shared/widgets/adaptive/adaptive_error_widget.dart`
+
+| Platform | Widget |
+|----------|--------|
+| iOS/macOS | `CupertinoIcons.exclamationmark_circle` + `CupertinoButton` |
+| Android/Web | `Icons.error_outline` + `ElevatedButton` |
+
+**Migration approach**: The original `AppErrorWidget` now delegates to `AdaptiveErrorWidget`, providing backward compatibility.
 
 ---
 
@@ -164,52 +177,6 @@ Container(
 
 ---
 
-### 4. AppErrorWidget (Medium Complexity)
-
-**File**: `lib/shared/widgets/error_widget.dart`
-
-**Current Implementation**:
-```dart
-Column(
-  children: [
-    Icon(Icons.error_outline, color: AppTheme.errorColor, size: 64),
-    Text(message, style: AppTheme.bodyLarge),
-    if (onRetry != null)
-      ElevatedButton(onPressed: onRetry, child: Text('Retry')),
-  ],
-)
-```
-
-**Cupertino Equivalent**:
-```dart
-Column(
-  children: [
-    Icon(CupertinoIcons.exclamationmark_circle,
-         color: CupertinoColors.systemRed, size: 64),
-    Text(message, style: AppTheme.bodyLarge),
-    if (onRetry != null)
-      CupertinoButton(
-        onPressed: onRetry,
-        child: Text('Retry'),
-      ),
-  ],
-)
-```
-
-**Migration Notes**:
-- Icon: `Icons.error_outline` → `CupertinoIcons.exclamationmark_circle`
-- Color: `AppTheme.errorColor` → `CupertinoColors.systemRed`
-- Button: `ElevatedButton` → `CupertinoButton` (text style, not filled)
-- Layout remains identical
-
-**API Mapping**:
-
-| Element | Material | Cupertino |
-|---------|----------|-----------|
-| Error icon | `Icons.error_outline` | `CupertinoIcons.exclamationmark_circle` |
-| Error color | `AppTheme.errorColor` | `CupertinoColors.systemRed` |
-| Retry button | `ElevatedButton` | `CupertinoButton` |
-
 ---
 
 ## Migration Steps (Template)
@@ -323,6 +290,6 @@ Common icon mappings for this project:
 ## Recommended Migration Order
 
 1. ~~LoadingIndicator~~ ✅ Complete
-2. **AppErrorWidget** - Straightforward icon/button swap
+2. ~~AppErrorWidget~~ ✅ Complete
 3. **AppButton** - Medium complexity, loading state handling
 4. **AppCard** - Most complex, tap feedback differences

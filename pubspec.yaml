@@ -25,6 +25,7 @@ dependencies:
   maplibre_gl: ^0.25.0
 
   # UI
+  cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.9
   intl: ^0.20.2
 
