@@ -27,6 +27,10 @@ class _StationSearchScreenState extends ConsumerState<StationSearchScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    // Reset search query when screen opens to avoid stale state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(stationSearchQueryProvider.notifier).setQuery('');
+    });
   }
 
   @override
