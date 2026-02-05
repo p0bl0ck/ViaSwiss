@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/config/theme.dart';
+
+import 'adaptive/adaptive_button.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -19,29 +20,12 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? AppTheme.primaryColor,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        minimumSize: const Size(double.infinity, 48),
-      ),
-      child: isLoading
-          ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (icon != null) ...[Icon(icon), const SizedBox(width: 8)],
-                Text(text),
-              ],
-            ),
+    return AdaptiveButton(
+      text: text,
+      onPressed: onPressed,
+      isLoading: isLoading,
+      icon: icon,
+      backgroundColor: backgroundColor,
     );
   }
 }
