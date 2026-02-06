@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'adaptive/adaptive_card.dart';
+
 class AppCard extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -16,16 +18,11 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: margin ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: padding ?? const EdgeInsets.all(16),
-          child: child,
-        ),
-      ),
+    return AdaptiveCard(
+      onTap: onTap,
+      padding: padding,
+      margin: margin,
+      child: child,
     );
   }
 }
